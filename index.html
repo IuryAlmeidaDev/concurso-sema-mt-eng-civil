@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Guia de Estudo — SEMA/MT 2026 (Engenheiro Civil)</title>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+  <meta name="description" content="Guia Completo e Estruturado de Estudo para o Concurso SEMA/MT 2026 — Analista de Meio Ambiente - Engenharia Civil">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/docsify@4/lib/themes/vue.css">
+  <style>
+    :root {
+      --theme-color: #059669;
+      --text-color-base: #1e293b;
+    }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      color: var(--text-color-base);
+    }
+    .markdown-section {
+      max-width: 960px;
+      padding: 30px 40px;
+    }
+    .sidebar {
+      background-color: #f8fafc;
+      border-right: 1px solid #e2e8f0;
+    }
+    .sidebar-nav strong {
+      display: block;
+      margin-top: 18px;
+      margin-bottom: 6px;
+      font-size: 0.85em;
+      color: #059669;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      font-weight: 700;
+    }
+    .sidebar-nav ul li a {
+      font-size: 0.95em;
+      color: #334155;
+      padding: 4px 0;
+    }
+    .sidebar-nav ul li.active > a {
+      color: var(--theme-color);
+      font-weight: 600;
+    }
+    .app-name-link {
+      font-weight: 800;
+      font-size: 1.2rem;
+      color: #059669 !important;
+    }
+    blockquote {
+      border-left: 4px solid var(--theme-color);
+      background: #f8fafc;
+      padding: 12px 18px;
+      border-radius: 6px;
+      margin: 1.5em 0;
+      color: #334155;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1.5em 0;
+      border-radius: 6px;
+      overflow: hidden;
+    }
+    th, td {
+      border: 1px solid #e2e8f0;
+      padding: 10px 14px;
+      font-size: 0.95em;
+    }
+    th {
+      background: #f1f5f9;
+      font-weight: 600;
+      text-align: left;
+    }
+    tr:nth-child(even) {
+      background: #f8fafc;
+    }
+    .mermaid {
+      background: #f8fafc;
+      padding: 20px;
+      border-radius: 8px;
+      margin: 1.5em 0;
+      border: 1px solid #e2e8f0;
+      display: flex;
+      justify-content: center;
+    }
+    ul.task-list {
+      list-style: none;
+      padding-left: 0;
+    }
+    li.task-list-item input[type="checkbox"] {
+      margin-right: 8px;
+      transform: scale(1.15);
+      accent-color: #059669;
+    }
+  </style>
+</head>
+<body>
+  <div id="app">Carregando Guia de Estudo SEMA/MT...</div>
+  <script>
+    window.$docsify = {
+      name: 'SEMA/MT 2026 🏗️',
+      repo: 'https://github.com/IuryAlmeidaDev/concurso-sema-mt-eng-civil',
+      loadSidebar: true,
+      subMaxLevel: 3,
+      auto2top: true,
+      homepage: 'README.md',
+      search: {
+        maxAge: 86400000,
+        paths: 'auto',
+        placeholder: '🔍 Pesquisar leis, tópicos ou matérias...',
+        noData: 'Nenhum resultado encontrado.',
+        depth: 4
+      },
+      copyCode: {
+        buttonText: 'Copiar',
+        errorText: 'Erro',
+        successText: 'Copiado!'
+      },
+      plugins: [
+        function(hook, vm) {
+          hook.beforeEach(function(content) {
+            content = content.replace(/\[\[(.*?)\|(.*?)\]\]/g, function(match, p1, p2) {
+              return '[' + p2.trim() + '](' + encodeURIComponent(p1.trim()) + '.md)';
+            });
+            content = content.replace(/\[\[(.*?)\]\]/g, function(match, p1) {
+              return '[' + p1.trim() + '](' + encodeURIComponent(p1.trim()) + '.md)';
+            });
+            content = content.replace(/^>\s*\[!NOTE\]\s*(.*)$/gim, '> ℹ️ **NOTA:** $1');
+            content = content.replace(/^>\s*\[!TIP\]\s*(.*)$/gim, '> 💡 **DICA:** $1');
+            content = content.replace(/^>\s*\[!WARNING\]\s*(.*)$/gim, '> ⚠️ **ATENÇÃO:** $1');
+            content = content.replace(/^>\s*\[!IMPORTANT\]\s*(.*)$/gim, '> ❗ **IMPORTANTE:** $1');
+            content = content.replace(/^>\s*\[!CAUTION\]\s*(.*)$/gim, '> 🛑 **CUIDADO:** $1');
+            return content;
+          });
+        }
+      ],
+      markdown: {
+        renderer: {
+          code: function(code, lang) {
+            if (lang === "mermaid") {
+              return '<div class="mermaid">' + code + '</div>';
+            }
+            return this.origin.code.apply(this, arguments);
+          }
+        }
+      }
+    };
+  </script>
+  <script src="//cdn.jsdelivr.net/npm/docsify@4"></script>
+  <script src="//cdn.jsdelivr.net/npm/docsify/lib/plugins/search.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/docsify-copy-code/dist/docsify-copy-code.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/docsify/lib/plugins/zoom-image.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+  <script>
+    mermaid.initialize({ startOnLoad: false, theme: 'default' });
+    window.$docsify.plugins.push(function(hook, vm) {
+      hook.doneEach(function() {
+        mermaid.init(undefined, '.mermaid');
+      });
+    });
+  </script>
+</body>
+</html>

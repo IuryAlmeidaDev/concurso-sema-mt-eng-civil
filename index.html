@@ -3,163 +3,577 @@
 <head>
   <meta charset="UTF-8">
   <title>Guia de Estudo — SEMA/MT 2026 (Engenheiro Civil)</title>
-  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
-  <meta name="description" content="Guia Completo e Estruturado de Estudo para o Concurso SEMA/MT 2026 — Analista de Meio Ambiente - Engenharia Civil">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
-  <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/docsify@4/lib/themes/vue.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
   <style>
     :root {
-      --theme-color: #059669;
-      --text-color-base: #1e293b;
+      --primary: #059669;
+      --primary-hover: #047857;
+      --primary-light: #ecfdf5;
+      --bg: #ffffff;
+      --bg-alt: #f8fafc;
+      --border: #e2e8f0;
+      --text: #0f172a;
+      --text-muted: #64748b;
+      --sidebar-w: 320px;
     }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-      color: var(--text-color-base);
+      font-family: 'Plus Jakarta Sans', -apple-system, sans-serif;
+      color: var(--text);
+      background: var(--bg);
+      line-height: 1.65;
     }
-    .markdown-section {
-      max-width: 960px;
-      padding: 30px 40px;
-    }
+
+    /* Layout */
+    .app { display: flex; min-height: 100vh; }
+    
+    /* Sidebar */
     .sidebar {
-      background-color: #f8fafc;
-      border-right: 1px solid #e2e8f0;
+      width: var(--sidebar-w);
+      background: var(--bg-alt);
+      border-right: 1px solid var(--border);
+      position: fixed;
+      top: 0; bottom: 0; left: 0;
+      display: flex;
+      flex-direction: column;
+      z-index: 50;
+      transition: transform 0.3s ease;
     }
-    .sidebar-nav strong {
-      display: block;
-      margin-top: 18px;
-      margin-bottom: 6px;
-      font-size: 0.85em;
-      color: #059669;
+
+    .sidebar-header {
+      padding: 20px 20px 14px;
+      border-bottom: 1px solid var(--border);
+      background: #ffffff;
+    }
+    .brand-title {
+      font-size: 1.15rem;
+      font-weight: 800;
+      color: var(--primary);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .brand-sub {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      font-weight: 500;
+      margin-top: 2px;
+    }
+    .search-box {
+      margin-top: 12px;
+      position: relative;
+    }
+    .search-box input {
+      width: 100%;
+      padding: 9px 12px 9px 34px;
+      font-size: 0.85rem;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: #ffffff;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    .search-box input:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(5, 150, 105, 0.15);
+    }
+    .search-icon {
+      position: absolute;
+      left: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 0.9rem;
+      color: var(--text-muted);
+    }
+
+    .sidebar-menu {
+      flex: 1;
+      overflow-y: auto;
+      padding: 16px 12px 24px;
+    }
+    .category-group { margin-bottom: 20px; }
+    .category-title {
+      font-size: 0.72rem;
+      font-weight: 700;
       text-transform: uppercase;
-      letter-spacing: 0.05em;
+      letter-spacing: 0.08em;
+      color: var(--primary);
+      padding: 0 10px 6px;
+    }
+    .nav-item {
+      display: block;
+      padding: 8px 12px;
+      border-radius: 8px;
+      font-size: 0.88rem;
+      font-weight: 500;
+      color: #334155;
+      text-decoration: none;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      margin-bottom: 2px;
+    }
+    .nav-item:hover {
+      background: #e2e8f0;
+      color: #0f172a;
+    }
+    .nav-item.active {
+      background: var(--primary-light);
+      color: var(--primary);
+      font-weight: 700;
+      border-left: 3px solid var(--primary);
+    }
+
+    /* Main Content */
+    .main {
+      margin-left: var(--sidebar-w);
+      flex: 1;
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .top-bar {
+      height: 58px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 32px;
+      background: #ffffff;
+      position: sticky;
+      top: 0;
+      z-index: 40;
+    }
+    .top-bar-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .mobile-menu-btn {
+      display: none;
+      background: none;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 6px 10px;
+      font-size: 1.1rem;
+      cursor: pointer;
+    }
+    .badge-info {
+      background: #f1f5f9;
+      color: #475569;
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-size: 0.75rem;
+      font-weight: 600;
+    }
+    .badge-primary {
+      background: var(--primary-light);
+      color: var(--primary);
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-size: 0.75rem;
       font-weight: 700;
     }
-    .sidebar-nav ul li a {
-      font-size: 0.95em;
-      color: #334155;
-      padding: 4px 0;
-    }
-    .sidebar-nav ul li.active > a {
-      color: var(--theme-color);
+    .github-link {
+      font-size: 0.85rem;
       font-weight: 600;
+      color: #334155;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 6px;
     }
-    .app-name-link {
+    .github-link:hover { color: var(--primary); }
+
+    .content-container {
+      max-width: 960px;
+      width: 100%;
+      margin: 0 auto;
+      padding: 40px 32px 80px;
+    }
+
+    /* Markdown Styling */
+    .markdown-body h1 {
+      font-size: 2.1rem;
       font-weight: 800;
-      font-size: 1.2rem;
-      color: #059669 !important;
+      color: #0f172a;
+      letter-spacing: -0.02em;
+      margin-bottom: 16px;
+      border-bottom: 2px solid #f1f5f9;
+      padding-bottom: 12px;
     }
-    blockquote {
-      border-left: 4px solid var(--theme-color);
-      background: #f8fafc;
-      padding: 12px 18px;
-      border-radius: 6px;
-      margin: 1.5em 0;
+    .markdown-body h2 {
+      font-size: 1.45rem;
+      font-weight: 700;
+      color: #1e293b;
+      margin-top: 36px;
+      margin-bottom: 14px;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 8px;
+    }
+    .markdown-body h3 {
+      font-size: 1.18rem;
+      font-weight: 700;
+      color: #334155;
+      margin-top: 24px;
+      margin-bottom: 10px;
+    }
+    .markdown-body p {
+      margin-bottom: 16px;
+      color: #334155;
+      font-size: 1rem;
+    }
+    .markdown-body ul, .markdown-body ol {
+      margin-bottom: 20px;
+      padding-left: 24px;
       color: #334155;
     }
-    table {
+    .markdown-body li { margin-bottom: 6px; }
+
+    /* Tables */
+    .markdown-body table {
       width: 100%;
       border-collapse: collapse;
-      margin: 1.5em 0;
-      border-radius: 6px;
+      margin: 24px 0;
+      border-radius: 8px;
       overflow: hidden;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+      font-size: 0.92rem;
     }
-    th, td {
-      border: 1px solid #e2e8f0;
-      padding: 10px 14px;
-      font-size: 0.95em;
+    .markdown-body th, .markdown-body td {
+      border: 1px solid var(--border);
+      padding: 11px 16px;
     }
-    th {
+    .markdown-body th {
       background: #f1f5f9;
-      font-weight: 600;
+      color: #1e293b;
+      font-weight: 700;
       text-align: left;
     }
-    tr:nth-child(even) {
-      background: #f8fafc;
+    .markdown-body tr:nth-child(even) { background: #f8fafc; }
+
+    /* Callouts */
+    .callout {
+      border-radius: 8px;
+      padding: 14px 18px;
+      margin: 20px 0;
+      font-size: 0.95rem;
+      line-height: 1.6;
+      border-left: 5px solid;
     }
+    .callout-note {
+      background: #eff6ff;
+      border-color: #3b82f6;
+      color: #1e40af;
+    }
+    .callout-tip {
+      background: #ecfdf5;
+      border-color: #10b981;
+      color: #065f46;
+    }
+    .callout-warning {
+      background: #fffbeb;
+      border-color: #f59e0b;
+      color: #92400e;
+    }
+    .callout-important {
+      background: #f5f3ff;
+      border-color: #8b5cf6;
+      color: #5b21b6;
+    }
+
+    /* Mermaid */
     .mermaid {
       background: #f8fafc;
-      padding: 20px;
-      border-radius: 8px;
-      margin: 1.5em 0;
-      border: 1px solid #e2e8f0;
+      padding: 24px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      margin: 24px 0;
       display: flex;
       justify-content: center;
+      overflow-x: auto;
     }
-    ul.task-list {
-      list-style: none;
-      padding-left: 0;
+
+    /* Tasks Checkboxes */
+    .task-list-item {
+      list-style-type: none;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 8px;
     }
-    li.task-list-item input[type="checkbox"] {
-      margin-right: 8px;
-      transform: scale(1.15);
-      accent-color: #059669;
+    .task-list-item input[type="checkbox"] {
+      width: 18px;
+      height: 18px;
+      accent-color: var(--primary);
+      cursor: pointer;
+    }
+
+    /* Navigation Footer */
+    .doc-nav {
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      margin-top: 48px;
+      padding-top: 24px;
+      border-top: 1px solid var(--border);
+    }
+    .doc-btn {
+      display: flex;
+      flex-direction: column;
+      padding: 12px 18px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      text-decoration: none;
+      color: #334155;
+      transition: all 0.2s;
+      max-width: 48%;
+      cursor: pointer;
+    }
+    .doc-btn:hover {
+      border-color: var(--primary);
+      background: var(--primary-light);
+      color: var(--primary);
+    }
+    .doc-btn-label {
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      font-weight: 700;
+      color: var(--text-muted);
+    }
+    .doc-btn-title {
+      font-size: 0.92rem;
+      font-weight: 600;
+      margin-top: 2px;
+    }
+
+    /* Responsive */
+    @media (max-width: 900px) {
+      .sidebar {
+        transform: translateX(-100%);
+      }
+      .sidebar.open {
+        transform: translateX(0);
+      }
+      .main {
+        margin-left: 0;
+      }
+      .mobile-menu-btn {
+        display: block;
+      }
+      .content-container {
+        padding: 24px 18px 60px;
+      }
     }
   </style>
 </head>
 <body>
-  <div id="app">Carregando Guia de Estudo SEMA/MT...</div>
+  <div class="app">
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <div class="brand-title">🏗️ SEMA/MT 2026</div>
+        <div class="brand-sub">Analista de Meio Ambiente • Eng. Civil</div>
+        <div class="search-box">
+          <span class="search-icon">🔍</span>
+          <input type="text" id="searchInput" placeholder="Pesquisar leis ou temas...">
+        </div>
+      </div>
+      <nav class="sidebar-menu" id="sidebarMenu"></nav>
+    </aside>
+
+    <!-- Main Content -->
+    <div class="main">
+      <header class="top-bar">
+        <div class="top-bar-left">
+          <button class="mobile-menu-btn" id="menuToggle" aria-label="Menu">☰</button>
+          <span class="badge-primary">Salário R$ 10.491,97</span>
+          <span class="badge-info">Prova: 13/12/2026</span>
+        </div>
+        <a href="https://github.com/IuryAlmeidaDev/concurso-sema-mt-eng-civil" target="_blank" class="github-link">
+          🐙 Ver no GitHub
+        </a>
+      </header>
+
+      <main class="content-container">
+        <article class="markdown-body" id="contentArea">
+          Carregando conteúdo...
+        </article>
+
+        <div class="doc-nav" id="docNav"></div>
+      </main>
+    </div>
+  </div>
+
   <script>
-    window.$docsify = {
-      name: 'SEMA/MT 2026 🏗️',
-      repo: 'https://github.com/IuryAlmeidaDev/concurso-sema-mt-eng-civil',
-      loadSidebar: true,
-      subMaxLevel: 3,
-      auto2top: true,
-      homepage: 'README.md',
-      search: {
-        maxAge: 86400000,
-        paths: 'auto',
-        placeholder: '🔍 Pesquisar leis, tópicos ou matérias...',
-        noData: 'Nenhum resultado encontrado.',
-        depth: 4
-      },
-      copyCode: {
-        buttonText: 'Copiar',
-        errorText: 'Erro',
-        successText: 'Copiado!'
-      },
-      plugins: [
-        function(hook, vm) {
-          hook.beforeEach(function(content) {
-            content = content.replace(/\[\[(.*?)\|(.*?)\]\]/g, function(match, p1, p2) {
-              return '[' + p2.trim() + '](' + encodeURIComponent(p1.trim()) + '.md)';
-            });
-            content = content.replace(/\[\[(.*?)\]\]/g, function(match, p1) {
-              return '[' + p1.trim() + '](' + encodeURIComponent(p1.trim()) + '.md)';
-            });
-            content = content.replace(/^>\s*\[!NOTE\]\s*(.*)$/gim, '> ℹ️ **NOTA:** $1');
-            content = content.replace(/^>\s*\[!TIP\]\s*(.*)$/gim, '> 💡 **DICA:** $1');
-            content = content.replace(/^>\s*\[!WARNING\]\s*(.*)$/gim, '> ⚠️ **ATENÇÃO:** $1');
-            content = content.replace(/^>\s*\[!IMPORTANT\]\s*(.*)$/gim, '> ❗ **IMPORTANTE:** $1');
-            content = content.replace(/^>\s*\[!CAUTION\]\s*(.*)$/gim, '> 🛑 **CUIDADO:** $1');
-            return content;
-          });
-        }
-      ],
-      markdown: {
-        renderer: {
-          code: function(code, lang) {
-            if (lang === "mermaid") {
-              return '<div class="mermaid">' + code + '</div>';
-            }
-            return this.origin.code.apply(this, arguments);
-          }
+    const DOCS = [{"id": "00-dashboard", "title": "🎯 Dashboard e Visão Geral", "category": "Planejamento", "fileName": "00 - Dashboard.md", "content": "---\ntags:\n  - concurso\n  - sema-mt\n  - engenharia-civil\n  - 2026\n---\n# 🎯 Concurso SEMA/MT 2026 — Engenheiro Civil\n\n## Resumo Rápido\n- **Cargo:** Analista de Meio Ambiente - Perfil 5: Engenharia Civil\n- **Remuneração:** R$ 10.491,97\n- **Banca:** Cesgranrio\n- **Vagas:** Cadastro de Reserva\n- **Jornada:** 40h\n- **Inscrição:** R$ 150,00\n- **Local da Prova:** Cuiabá/MT\n- **Data da Prova:** 13/12/2026\n\n## Estrutura da Prova\n\n| Disciplina | Questões | Pontos | Peso | Nota Mínima |\n| :--- | :--- | :--- | :--- | :--- |\n| Língua Portuguesa | 15 | 15 | 1 | N/A* |\n| Geografia/História MT | 10 | 10 | 1 | N/A* |\n| Ética/Filosofia/Atualidades/Legislação | 5 | 5 | 1 | N/A* |\n| Conhecimentos Específicos | 40 | 40 | 1 | N/A* |\n| Prova Discursiva | 1 | 10 | - | 6,0 (60%) |\n| **Total** | **71** | **80 máximo** | - | **42 (Obj) + 6,0 (Disc)** |\n\n> [!WARNING]\n> * **Nota mínima:** 42 pts na objetiva (60%) + 6,0 na discursiva (60%). **É obrigatório NÃO zerar nenhuma disciplina.**\n\n## Navegação do Vault\n- [[01 - Fluxo de Estudo]]\n- [[02 - Cronograma Oficial]]\n\n## Progresso de Estudo\n- [ ] Língua Portuguesa\n- [ ] Geografia/História MT\n- [ ] Ética/Filosofia/Atualidades/Legislação\n- [ ] Conhecimentos Específicos\n- [ ] Prova Discursiva\n"}, {"id": "01-fluxo", "title": "📋 Fluxo de Estudo Completo", "category": "Planejamento", "fileName": "01 - Fluxo de Estudo.md", "content": "---\ntags:\n  - fluxo\n  - estrategia\n  - planejamento\n---\n# 📋 Fluxo de Estudo — Plano Completo\n\n## Diagrama de Fluxo\n\n```mermaid\nflowchart TD\n    A[\"FASE 1 (Semanas 1-3) Base Legal + Língua Portuguesa\"] --> B[\"FASE 2 (Semanas 4-6) Conhecimentos Gerais (Geo/História MT + Ética)\"]\n    B --> C[\"FASE 3 (Semanas 7-12) Conhecimentos Específicos Transversais (Legislação Ambiental)\"]\n    C --> D[\"FASE 4 (Semanas 7-14) Conhecimentos Específicos Direcionados (Engenharia Civil pura)\"]\n    D --> E[\"FASE 5 (Semana 13-14) Revisão Final + Simulados + Discursiva\"]\n```\n\n## Detalhamento das Fases\n\n### FASE 1 (Semanas 1-3): Base Legal + Língua Portuguesa\n- **Objetivo da fase:** Construir base sólida na língua nativa e no entendimento inicial das leis.\n- **Matérias a estudar:** [[Língua Portuguesa]], Legislação inicial.\n- **Carga horária sugerida:** 15h a 20h / semana.\n- **Estratégia de estudo:** Leitura ativa da teoria, resolução massiva de questões da Cesgranrio.\n- **Marcos de validação:** Mini-simulados semanais de Português (meta: >80% de acerto).\n\n### FASE 2 (Semanas 4-6): Conhecimentos Gerais (Geo/História MT + Ética)\n- **Objetivo da fase:** Dominar o contexto regional e regras éticas.\n- **Matérias a estudar:** [[Geografia/História MT]], [[Ética/Filosofia/Atualidades/Legislação]].\n- **Carga horária sugerida:** 15h a 20h / semana.\n- **Estratégia de estudo:** Criação de mapas mentais, leitura focada.\n- **Marcos de validação:** Resolução de questões históricas e de concursos regionais.\n\n### FASE 3 (Semanas 7-12): Conhecimentos Específicos Transversais (Legislação Ambiental)\n- **Objetivo da fase:** Compreender todo o arcabouço jurídico ambiental essencial para o cargo.\n- **Matérias a estudar:** [[Conhecimentos Específicos]] (Legislação).\n- **Carga horária sugerida:** 25h / semana.\n- **Estratégia de estudo:** Leitura da lei seca, resumos e flashcards (Spaced Repetition).\n- **Marcos de validação:** Exercícios simulando casos práticos, >75% de acertos.\n\n### FASE 4 (Semanas 7-14): Conhecimentos Específicos Direcionados (Engenharia Civil pura)\n- **Objetivo da fase:** Aprofundar nos temas técnicos da Engenharia Civil.\n- **Matérias a estudar:** [[Conhecimentos Específicos]] (Engenharia Civil).\n- **Carga horária sugerida:** 25h / semana (em paralelo com Fase 3).\n- **Estratégia de estudo:** Resolução de questões de cálculo, leitura de normas técnicas (ABNT).\n- **Marcos de validação:** Simulado técnico, % de acerto esperado de 70-80%.\n\n### FASE 5 (Semana 13-14): Revisão Final + Simulados + Discursiva\n- **Objetivo da fase:** Consolidação do conhecimento e treino de tempo de prova.\n- **Matérias a estudar:** Revisão geral de todas as matérias e [[Prova Discursiva]].\n- **Carga horária sugerida:** 30h / semana.\n- **Estratégia de estudo:** Simulados completos e redação com cronômetro.\n- **Marcos de validação:** Simulado completo > 45 pts (Objetiva), Discursiva estruturada.\n\n## Estratégia de Estudo por Peso\n- **Conhecimentos Específicos:** 40 questões (57% da prova) → dedicar ~50-55% do tempo.\n- **Língua Portuguesa:** 15 questões (21%) → dedicar ~15% do tempo.\n- **Geo/História MT:** 10 questões (14%) → dedicar ~15% do tempo.\n- **Ética/Legislação:** 5 questões (7%) → dedicar ~10% do tempo.\n- **Discursiva:** (10 pts separados) → treinar 1 redação/semana a partir da semana 6.\n\n## Ciclo Semanal de Estudo\n\n| Dia da Semana | Matéria 1 | Matéria 2 | Extra |\n| :--- | :--- | :--- | :--- |\n| Segunda | Conhecimentos Específicos | Língua Portuguesa | Flashcards |\n| Terça | Conhecimentos Específicos | Geo/História MT | Exercícios |\n| Quarta | Conhecimentos Específicos | Ética/Legislação | Leitura de Lei |\n| Quinta | Conhecimentos Específicos | Língua Portuguesa | Exercícios |\n| Sexta | Revisão da Semana | Conhecimentos Específicos | Simulados parciais |\n| Sábado | Discursiva | Geo/História MT | Correção e Resumo |\n| Domingo | Descanso / Simulado Geral | | |\n\n## Técnicas de Estudo Recomendadas\n- **Pomodoro:** Blocos de 25-50 min de foco total.\n- **Active Recall:** Tentar lembrar do conteúdo sem ler antes.\n- **Spaced Repetition:** Revisões em intervalos crescentes.\n- **Mapas Mentais:** Para visualização de tópicos de Geo/História e Leis.\n\n> [!WARNING]\n> É obrigatório obter no mínimo 42 pontos na prova objetiva e não zerar nenhuma disciplina. Dê atenção a todas as matérias!\n\n> [!TIP]\n> A prova discursiva tem peso importantíssimo como critério de desempate e aprovação (mínimo de 6,0 pontos). Treine a escrita!\n"}, {"id": "02-cronograma", "title": "📅 Cronograma Oficial", "category": "Planejamento", "fileName": "02 - Cronograma Oficial.md", "content": "---\ntags:\n  - cronograma\n  - datas\n---\n# 📅 Cronograma Oficial do Concurso\n\n## Tabela de Datas\n\n| Evento | Data |\n| :--- | :--- |\n| Inscrições | 17/09/2026 a 14/10/2026 |\n| Isenção | 17/09 a 24/09/2026 |\n| Resultado Isenção | 30/09/2026 |\n| Resultado Final Isenção | 09/10/2026 |\n| Inscrições Deferidas (preliminar) | 22/10/2026 |\n| Inscrições Deferidas (final) | 30/10/2026 |\n| Cartão de Confirmação | 08/12/2026 |\n| PROVA | 13/12/2026 (5 horas) |\n| Gabaritos Preliminares | 14/12/2026 |\n| Recursos Gabarito | 14-15/12/2026 |\n| Cartão-Resposta | 22/01/2027 |\n| Resultado Objetiva + Discursiva | 28/01/2027 |\n| Revisão Discursiva | 28-29/01/2027 |\n| Resultado Final | 27/03/2027 |\n| Validade | 2 anos (prorrogável por +2) |\n\n## Contagem Regressiva\nFaltam **102 dias** para a prova (13/12/2026). *(A data atual é 02/09/2026)*\n\n> [!IMPORTANT]\n> Acompanhe rigorosamente o período de **Inscrições (17/09/2026 a 14/10/2026)** e a data da **PROVA (13/12/2026)**.\n"}, {"id": "03-portugues", "title": "📝 Língua Portuguesa", "category": "Conhecimentos Básicos", "fileName": "03 - Língua Portuguesa.md", "content": "---\ntags: [portugues, basico, 15-questoes]\n---\n# 📝 Língua Portuguesa (15 questões | 15 pontos)\n\n> [!IMPORTANT]\n> Você não pode zerar esta disciplina! Uma base sólida em Língua Portuguesa é essencial para a aprovação.\n\n## 1. Compreensão e interpretação de textos\n- **Resumo Teórico:** Compreensão refere-se ao que está escrito (dados explícitos). Interpretação refere-se ao que se deduz do texto (implícitos).\n- **Dicas Cesgranrio:** A banca gosta de textos densos (artigos de opinião, crônicas). Leia o comando da questão antes do texto.\n- **Pontos-chave:**\n  - Diferencie informação explícita de inferência.\n  - Atenção ao vocabulário.\n  - Identifique o tema central e a intenção do autor.\n\n## 2. Argumentação e persuasão\n- **Resumo Teórico:** Argumentação visa convencer o leitor. Utiliza-se de dados, exemplos, autoridades e raciocínio lógico. Falácias são erros de raciocínio.\n- **Dicas Cesgranrio:** Cuidado com questões que pedem para identificar o argumento principal ou classificar a falácia.\n- **Pontos-chave:**\n  - Tipos de arguments (autoridade, evidência, princípio).\n  - Estrutura: tese, desenvolvimento, conclusão.\n  - Reconhecimento de falácias comuns.\n\n## 3. Comunicação assertiva\n- **Resumo Teórico:** Uso de linguagem clara, objetiva, livre de ambiguidades e jargões desnecessários, adequada ao contexto corporativo e oficial.\n- **Dicas Cesgranrio:** Foco em questões que pedem reescrita de frases para torná-las mais diretas e sem ruídos.\n- **Pontos-chave:**\n  - Linguagem simples.\n  - Concisão (evitar prolixidade).\n  - Objetividade.\n\n## 4. Organização textual\n- **Resumo Teórico:** Estrutura em parágrafos que dividem introdução, desenvolvimento e conclusão.\n- **Dicas Cesgranrio:** Questões sobre a função de um parágrafo específico ou a ordem lógica dos períodos.\n- **Pontos-chave:**\n  - Tópico frasal.\n  - Desenvolvimento da ideia.\n  - Paragrafação adequada.\n\n## 5. Coesão e coerência\n- **Resumo Teórico:** Coesão é a ligação gramatical (pronomes, conjunções). Coerência é a lógica de sentido.\n- **Dicas Cesgranrio:** Troca de conjunções (causa, concessão, oposição) é muito cobrada!\n- **Pontos-chave:**\n  - Elementos anafóricos e catafóricos.\n  - Conjunções coordenativas e subordinativas.\n  - Manutenção do sentido.\n\n## 6. Tipologia textual\n- **Resumo Teórico:** Diferença entre narração (fatos), descrição (características), dissertação (argumentação/exposição) e injunção (ordens).\n- **Dicas Cesgranrio:** Identificação da tipologia predominante e secundária em textos híbridos.\n- **Pontos-chave:**\n  - Injunção: manuais, receitas.\n  - Exposição: informar sem opinar.\n  - Dissertação: defender ponto de vista.\n\n## 7. Ortografia oficial\n- **Resumo Teórico:** Uso correto de letras (s/z, x/ch, j/g) e formas variantes.\n- **Dicas Cesgranrio:** Uso do \"porquê\", mal/mau, onde/aonde, acerca de / a cerca de.\n- **Pontos-chave:**\n  - Regras do X e CH.\n  - Uso dos porquês.\n  - Palavras homônimas parônimas.\n\n## 8. Acentuação gráfica\n- **Resumo Teórico:** Regras baseadas na tonicidade: oxítonas, paroxítonas e proparoxítonas.\n- **Dicas Cesgranrio:** A banca foca nas exceções e regras do Novo Acordo (ditongos abertos e hiatos).\n- **Pontos-chave:**\n  - Todas proparoxítonas são acentuadas.\n  - Acentuação de oxítonas e paroxítonas.\n  - Regras dos hiatos (i e u tônicos).\n\n## 9. Crase\n- **Resumo Teórico:** Fusão da preposição 'a' com o artigo 'a' ou pronome demonstrativo.\n- **Dicas Cesgranrio:** Troque a palavra feminina por masculina; se virar \"ao\", tem crase.\n- **Pontos-chave:**\n  - Obrigatória: locuções femininas.\n  - Proibida: antes de verbos e palavras masculinas.\n  - Facultativa: pronomes possessivos femininos, nomes próprios femininos, até a.\n\n## 10. Sintaxe da oração e do período\n- **Resumo Teórico:** Análise dos termos essenciais (sujeito, predicado), integrantes e acessórios. Período simples e composto (coordenação e subordinação).\n- **Dicas Cesgranrio:** Identificação de sujeito (oculto, indeterminado, oracional) e função sintática do \"que\" e \"se\".\n- **Pontos-chave:**\n  - Tipos de sujeito.\n  - Vozes verbais.\n  - Orações subordinadas adjetivas e substantivas.\n\n## 11. Pontuação\n- **Resumo Teórico:** Uso de sinais de pontuação para organizar o raciocínio. A vírgula é o mais cobrado.\n- **Dicas Cesgranrio:** Nunca se separa sujeito do verbo, nem verbo do complemento com vírgula.\n- **Pontos-chave:**\n  - Vírgula em adjunto adverbial deslocado.\n  - Uso do travessão para isolar aposto.\n  - Ponto e vírgula em enumerações.\n\n## 12. Concordância nominal e verbal\n- **Resumo Teórico:** Ajuste de flexão entre termos. Verbal (verbo e sujeito) e Nominal (nome e determinantes).\n- **Dicas Cesgranrio:** Casos do verbo haver (impessoal) e fazer (tempo).\n- **Pontos-chave:**\n  - Verbo \"haver\" no sentido de existir = singular.\n  - Sujeito composto posposto.\n  - Concordância com expressões partitivas.\n\n## 13. Regência nominal e verbal\n- **Resumo Teórico:** Relação de dependência entre as palavras e seus complementos (com ou sem preposição).\n- **Dicas Cesgranrio:** Verbos clássicos: assistir, visar, preferir, aspirar.\n- **Pontos-chave:**\n  - Assistir (ver = a, ajudar = sem prep).\n  - Visar (almejar = a, mirar = sem prep).\n  - Preferir algo a outra coisa.\n\n## 14. Significação das palavras\n- **Resumo Teórico:** Sentido das palavras no contexto. Sinônimos, antônimos, parônimos (parecidos) e homônimos (iguais). Polissemia (vários sentidos).\n- **Dicas Cesgranrio:** Questões de reescrita pedindo sinônimos perfeitos no contexto.\n- **Pontos-chave:**\n  - Diferença parônimos/homônimos.\n  - Polissemia vs ambiguidade.\n  - Vocabulário erudito básico.\n\n## 15. Colocação pronominal\n- **Resumo Teórico:** Posição do pronome oblíquo átono em relação ao verbo: próclise (antes), mesóclise (meio), ênclise (depois).\n- **Dicas Cesgranrio:** Palavras atrativas (negativas, advérbios, pronomes relativos) exigem próclise.\n- **Pontos-chave:**\n  - Nunca começar frase com pronome oblíquo átono.\n  - Mesóclise só em futuro do presente/pretérito sem palavra atrativa.\n  - Principais atratores de próclise.\n\n## 16. Redação Oficial\n- **Resumo Teórico:** Normas do Manual de Redação da Presidência da República (3ª edição).\n- **Dicas Cesgranrio:** Padrão Ofício (extinção de memorando e aviso), pronomes de tratamento.\n- **Pontos-chave:**\n  - Atributos da redação oficial (impessoalidade, clareza, concisão).\n  - Vocativo e fecho corretos (Respeitosamente / Atenciosamente).\n  - Estrutura do Padrão Ofício.\n\n## 17. Novo Acordo Ortográfico\n- **Resumo Teórico:** Mudanças na acentuação e no uso do hífen.\n- **Dicas Cesgranrio:** Foco no fim do acento em ditongos abertos (ei, oi) nas paroxítonas (ex: ideia, jiboia).\n- **Pontos-chave:**\n  - Hífen com prefixos.\n  - Vogais iguais separam, vogais diferentes juntam.\n  - Fim do trema.\n\n## Material de Referência\n- **Livros:** Gramática para Concursos (Pestana)\n- **Sites:** QConcursos (filtre por Cesgranrio), YouTube (Canais de professores como Flávia Rita, Elias Santana)\n\n## Checklist de Revisão\n- [ ] Compreensão e interpretação de textos\n- [ ] Argumentação e persuasão\n- [ ] Comunicação assertiva\n- [ ] Organização textual\n- [ ] Coesão e coerência\n- [ ] Tipologia textual\n- [ ] Ortografia oficial\n- [ ] Acentuação gráfica\n- [ ] Crase\n- [ ] Sintaxe da oração e do período\n- [ ] Pontuação\n- [ ] Concordância nominal e verbal\n- [ ] Regência nominal e verbal\n- [ ] Significação das palavras\n- [ ] Colocação pronominal\n- [ ] Redação Oficial\n- [ ] Novo Acordo Ortográfico\n"}, {"id": "04-geografia-historia-mt", "title": "🗺️ Geografia e História de MT", "category": "Conhecimentos Gerais", "fileName": "04 - Geografia e História de MT.md", "content": "---\ntags: [geografia, historia, mato-grosso, 10-questoes]\n---\n# 🗺️ Geografia e História Política e Econômica de MT (10 questões | 10 pontos)\n\n> [!IMPORTANT]\n> Você não pode zerar esta disciplina! Por ser matéria regional, muitos candidatos têm dificuldade. Faça a diferença aqui!\n\n## PARTE 1: GEOGRAFIA DE MT\n\n### 1. Produção do espaço regional\n- **Resumo Teórico:** Formação ligada aos ciclos econômicos (mineração, borracha, pecuária) culminando na moderna expansão agropecuária e consolidação da fronteira agrícola.\n- **Dicas Cesgranrio:** Relacione a infraestrutura de transportes (BR-163) com o escoamento da soja.\n- **Pontos-chave:**\n  - Marcha para o Oeste (década de 1940).\n  - Expansão agrícola a partir dos anos 70/80 (soja).\n  - Agronegócio como motor econômico e suas dinâmicas socioespaciais.\n\n### 2. Aspectos naturais\n- **Resumo Teórico:** Clima tropical continental (duas estações bem definidas). Relevo diversificado. MT é único por possuir três biomas.\n- **Dicas Cesgranrio:** Localize os biomas no mapa estadual (Norte: Amazônia, Centro/Sul/Leste: Cerrado, Sudoeste: Pantanal).\n- **Pontos-chave:**\n  - **Clima:** Tropical e Equatorial (no norte).\n  - **Relevo:** Chapadas (Guimarães, Parecis), Planícies (Pantanal) e Depressões.\n  - **Biomas:** Amazônia (54%), Cerrado (39%), Pantanal (7%).\n  - **Hidrografia:** Bacias Amazônica, Platina (Paraguai) e Tocantins-Araguaia.\n\n### 3. Políticas de gestão ambiental\n- **Resumo Teórico:** Foco no monitoramento de desmatamento, queimadas, e a criação/gestão de Unidades de Conservação e terras indígenas pela SEMA e IBAMA.\n- **Dicas Cesgranrio:** Tema muito provável para redação/questões devido à atual crise climática e incêndios no Pantanal/Cerrado.\n- **Pontos-chave:**\n  - SEMA-MT e CAR (Cadastro Ambiental Rural).\n  - Unidades de Conservação Estaduais.\n  - Conflitos ambientais: garimpo ilegal, desmatamento para pasto.\n\n### 4. Características econômicas\n- **Resumo Teórico:** MT é a maior potência do agronegócio brasileiro, líder nacional na produção de soja, algodão, milho e no rebanho bovino.\n- **Dicas Cesgranrio:** Agronegócio gera alta concentração de renda e foca em commodities para exportação.\n- **Pontos-chave:**\n  - Soja e Algodão (líder nacional).\n  - Rebanho Bovino comercial (maior do país).\n  - Industrialização focada em agroindústria (esmagamento de soja, frigoríficos, etanol de milho).\n\n### 5. Geografia da população\n- **Resumo Teórico:** População formada por intensa migração, especialmente sulistas (gaúchos/paranaenses) a partir dos anos 1970 para áreas de fronteira agrícola.\n- **Dicas Cesgranrio:** Compreenda o choque cultural e a miscigenação (cuiabano tradicional vs. migrante sulista).\n- **Pontos-chave:**\n  - Alta taxa de urbanização.\n  - Desigualdade na distribuição de renda.\n  - Migração de sulistas impulsionada por políticas do governo militar.\n\n### 6. Processo de urbanização\n- **Resumo Teórico:** Crescimento de cidades ao longo das rodovias (eixos) impulsionado pelo agronegócio.\n- **Dicas Cesgranrio:** Diferença entre a capital administrativa (Cuiabá) e os \"polos do agro\" (Sinop, Rondonópolis, Sorriso).\n- **Pontos-chave:**\n  - Cuiabá e Várzea Grande (Região Metropolitana).\n  - Rondonópolis (hub logístico/ferroviário no sul).\n  - Sinop e Sorriso (polos da BR-163 e agronegócio no norte).\n\n### 7. Dinâmica do espaço agrário\n- **Resumo Teórico:** Predominância do latifúndio monocultor, alta mecanização e tecnologia, contrastando com a agricultura familiar e assentamentos.\n- **Dicas Cesgranrio:** O modelo agroexportador e seus impactos sociais (conflitos fundiários, expropriação).\n- **Pontos-chave:**\n  - Concentração fundiária.\n  - Expansão rápida da fronteira agrícola sobre o cerrado e borda amazônica.\n  - Tensão entre modernização e conflito agrário.\n\n## PARTE 2: HISTÓRIA DE MT\n\n### 1. Povos indígenas antes da colonização\n- **Resumo Teórico:** Rica diversidade étnica antes da chegada europeia. Grupos como Bororo, Xavante, Paresi e Kayapó dominavam diferentes regiões.\n- **Dicas Cesgranrio:** Os indígenas não foram atores passivos; eles resistiram, negociaram e sofreram intenso etnocídio.\n- **Pontos-chave:**\n  - Diversidade de nações indígenas.\n  - Ocupação pré-colonial.\n  - Impacto devastador do contato europeu.\n\n### 2. Missões e catequese (séc. XVII)\n- **Resumo Teórico:** Primeiras incursões espanholas (jesuítas) na região do Itatim, catequizando indígenas para fixação.\n- **Dicas Cesgranrio:** Os jesuítas sofreram ataques de bandeirantes paulistas que buscavam escravizar os nativos.\n- **Pontos-chave:**\n  - Missões jesuíticas (espanholas).\n  - Foco na conversão.\n  - Conflito com bandeirantes.\n\n### 3. Bandeiras (séc. XVIII)\n- **Resumo Teórico:** Bandeiras de preamento (caça ao índio) e prospectoras (busca por metais preciosos) vindas de São Paulo.\n- **Dicas Cesgranrio:** Bandeiras paulistas foram as responsáveis pela expansão das fronteiras luso-brasileiras além do Tratado de Tordesilhas.\n- **Pontos-chave:**\n  - Antônio Pires de Campos e Pascoal Moreira Cabral.\n  - Escravização de indígenas.\n  - Descoberta das primeiras lavras de ouro.\n\n### 4. Cuiabá - de Arraial a Vila\n- **Resumo Teórico:** Fundação oficial em 1719 após a descoberta do ouro nas margens do Rio Coxipó por Pascoal Moreira Cabral.\n- **Dicas Cesgranrio:** Em 1727, elevou-se a Vila Real do Senhor Bom Jesus de Cuiabá. A elite \"Sorocabana\" controlava o comércio e abastecimento (Monções).\n- **Pontos-chave:**\n  - Ata de Fundação (1719).\n  - Expedições fluviais (Monções) ligando SP a Cuiabá.\n  - Sorocabanos (comerciantes influentes).\n\n### 5. Vila Bela da Santíssima Trindade\n- **Resumo Teórico:** Fundada em 1752 no Vale do Guaporé por Gomes Freire de Andrade. Foi a primeira capital da Capitania de MT.\n- **Dicas Cesgranrio:** Criada por motivos geopolíticos para garantir a posse de Portugal contra as pretensões espanholas na fronteira oeste.\n- **Pontos-chave:**\n  - Primeira Capital.\n  - Defesa militar e controle da fronteira (Tratado de Madri - 1750).\n  - Decadência precoce devido à distância e surtos de malária.\n\n### 6. Mineração\n- **Resumo Teórico:** Base econômica do séc. XVIII. Foco no ouro de aluvião.\n- **Dicas Cesgranrio:** Mão de obra majoritariamente de africanos escravizados, em condições severas.\n- **Pontos-chave:**\n  - Ciclo do Ouro.\n  - Exploração de aluvião (rápido esgotamento).\n  - Intensa utilização de escravizados africanos.\n\n### 7. Decadência da mineração → Pecuária\n- **Resumo Teórico:** Com o fim do ouro (início do séc. XIX), MT passa por isolamento econômico, substituindo a mineração pela pecuária extensiva, poaia e engenhos de açúcar.\n- **Dicas Cesgranrio:** Transição para economia de subsistência e isolamento geográfico duradouro.\n- **Pontos-chave:**\n  - Fim do ciclo aurífero.\n  - Pecuária extensiva na região pantaneira.\n  - Extrativismo (poaia/ipecacuanha e borracha depois).\n\n### 8. A Rusga (1834)\n- **Resumo Teórico:** Revolta de caráter nativista em Cuiabá (período regencial) onde \"brasileiros\" (nativistas) massacraram portugueses (adotivos).\n- **Dicas Cesgranrio:** Refletia o sentimento antilusitano e a crise econômica/política do pós-Independência.\n- **Pontos-chave:**\n  - 1834 (Período Regencial).\n  - Brasileiros x Portugueses.\n  - Contexto de crise econômica e insatisfação militar.\n\n### 9. Guerra da Tríplice Aliança (1864-1870)\n- **Resumo Teórico:** Guerra do Paraguai. MT foi a primeira província invadida por Solano López em 1864, via Rio Paraguai.\n- **Dicas Cesgranrio:** A \"Retirada da Laguna\" foi a trágica tentativa das tropas brasileiras (vindas de MG/RJ) de retomar territórios invadidos em MT (atual MS).\n- **Pontos-chave:**\n  - Invasão paraguaia em Corumbá e forte de Coimbra.\n  - Isolamento de Cuiabá.\n  - Abertura da navegação do Rio Paraguai no pós-guerra.\n\n### 10. Estado Novo e Marcha para o Oeste\n- **Resumo Teórico:** Política de Getúlio Vargas nos anos 1940 para integrar o Centro-Oeste e Amazônia. Fundação de colônias agrícolas e Cidades (Goiânia). Expedição Roncador-Xingu.\n- **Dicas Cesgranrio:** Fundação da Colônia Agrícola de Dourados e a Fundação Brasil Central.\n- **Pontos-chave:**\n  - Integração nacional de Vargas.\n  - Colonização dirigida pelo Estado.\n  - Expedição Roncador-Xingu (Irmãos Villas-Bôas).\n\n### 11. Ditadura e Divisão do Estado\n- **Resumo Teórico:** Ditadura Militar incentiva a colonização privada (projetos da SUDAM, rodovias BR-163 e BR-364). Em 1977, Lei Complementar nº 31 divide MT, criando Mato Grosso do Sul (efetivado em 1979).\n- **Dicas Cesgranrio:** O norte (atual MT) permaneceu mais focado na integração com a Amazônia, enquanto o sul (MS) estava mais ligado a SP/PR.\n- **Pontos-chave:**\n  - Incentivos fiscais e colonizadoras privadas (Sinop, etc).\n  - Divisão geopolítica em 1977 (Ernesto Geisel).\n  - Início do boom do agronegócio.\n\n### 12. Tensões no campo\n- **Resumo Teórico:** Conflitos gerados pela rápida expansão da fronteira, grilagem de terras, posseiros x fazendeiros, indígenas, e movimentos camponeses (MST).\n- **Dicas Cesgranrio:** O \"Eldorado\" mato-grossense atraiu muitos sem-terra e causou violentos conflitos rurais nas décadas de 80, 90 e 2000.\n- **Pontos-chave:**\n  - Grilagem e sobreposição de títulos de terra.\n  - Massacre de trabalhadores e lideranças rurais.\n  - Disputas envolvendo terras indígenas e Unidades de Conservação.\n\n## Dados Importantes para Memorizar\n\n| Informação | Dado |\n| :--- | :--- |\n| **Capital** | Cuiabá |\n| **Biomas** | Amazônia, Cerrado e Pantanal |\n| **Área Territorial** | ~ 903.000 km² (3º maior do BR) |\n| **População (2022)** | ~ 3,6 milhões |\n| **Principais Rios** | Paraguai, Cuiabá, Araguaia, Teles Pires, Juruena |\n| **Economia** | Agropecuária (Soja, Algodão, Milho, Bovinos) |\n\n## Checklist de Revisão\n- [ ] Produção do espaço regional\n- [ ] Aspectos naturais (clima, relevo, vegetação, hidrografia)\n- [ ] Políticas de gestão ambiental e SEMA\n- [ ] Características econômicas e Agronegócio\n- [ ] Geografia da população e demografia\n- [ ] Processo de urbanização\n- [ ] Dinâmica do espaço agrário\n- [ ] Povos indígenas antes da colonização\n- [ ] Missões e catequese (séc. XVII)\n- [ ] Bandeiras e expansão (séc. XVIII)\n- [ ] Cuiabá - fundação e ciclo do ouro\n- [ ] Vila Bela da Santíssima Trindade\n- [ ] Mineração (ouro e escravidão)\n- [ ] Decadência da mineração e Pecuária\n- [ ] A Rusga (1834)\n- [ ] Guerra do Paraguai (1864-1870) e Retirada da Laguna\n- [ ] Estado Novo, Vargas e Marcha para o Oeste\n- [ ] Ditadura, Projetos de Colonização e Divisão do Estado (1977)\n- [ ] Tensões no campo e conflitos fundiários\n"}, {"id": "05-etica-filosofia", "title": "⚖️ Ética, Filosofia e Legislação", "category": "Conhecimentos Gerais", "fileName": "05 - Ética, Filosofia, Atualidades e Legislação.md", "content": "---\ntags: [etica, filosofia, atualidades, legislacao, 5-questoes]\n---\n# ⚖️ Ética, Filosofia, Atualidades e Legislação Específica (5 questões | 5 pontos)\n\n## ÉTICA E FILOSOFIA\n\n### 1. Filosofia como busca racional\n- **Resumo:** A filosofia surge na Grécia Antiga como transição do pensamento mítico (mito) para o pensamento racional (logos).\n- **Foco:** Busca por respostas através da razão, questionamento e argumentação crítica.\n- **Pontos-chave:** Reflexão radical, rigorosa e de conjunto.\n\n### 2. Tipos de conhecimento\n- **Empírico (Senso Comum):** Baseado na experiência diária, assistemático, acrítico.\n- **Científico:** Metódico, sistemático, testável, objetivo.\n- **Filosófico:** Racional, questionador, busca os fundamentos e a essência, não precisa de validação laboratorial, mas de consistência lógica.\n- **Teológico/Religioso:** Baseado na fé e dogmas revelados.\n\n### 3. Correntes epistemológicas\n- **Racionalismo (Descartes):** A razão é a única fonte do conhecimento verdadeiro (ideias inatas). Penso, logo existo.\n- **Empirismo (Locke, Hume):** Todo conhecimento provém da experiência sensorial. A mente é uma \"tábula rasa\".\n- **Criticismo (Kant):** Síntese. O conhecimento começa com a experiência, mas não deriva todo dela; necessita das estruturas a priori da razão.\n\n### 4. Desafios contemporâneos\n- **Pós-verdade:** Fatos objetivos têm menos influência do que apelos à emoção e a crenças pessoais.\n- **Fake News:** Desinformação disseminada em rede, afetando a democracia e o debate público.\n- **Inteligência Artificial:** Dilemas éticos sobre viés algorítmico, substituição de empregos e privacidade.\n\n### 5. Assédio moral e sexual\n- **Assédio Moral:** Conduta abusiva, frequente e reiterada (palavras, atos, gestos) que atenta contra a dignidade ou integridade psíquica da pessoa (humilhações no trabalho).\n- **Assédio Sexual:** Conduta de natureza sexual, não desejada, com o intuito de obter vantagem ou favorecimento, prevalecendo-se da condição de superior hierárquico.\n- **Medidas:** Denúncias anônimas, corregedorias, canais de ética, campanhas de conscientização.\n\n### 6. Atitudes éticas\n- **Ética vs Moral:** Moral é o conjunto de regras (prática); Ética é a reflexão sobre essas regras (teoria).\n- **Serviço Público:** Pautado na legalidade, impessoalidade, moralidade, publicidade e eficiência. Respeito ao cidadão, probidade, honestidade e virtude.\n\n## ATUALIDADES\n\n> [!TIP]\n> **Dicas de Estudo para Atualidades:** Acompanhe noticiários, podcasts e resumos semanais de cursinhos. Foque em eventos com impacto nacional ou global sustentado, evitando notícias passageiras.\n\n**Temas Quentes (2025/2026):**\n- **Agenda Ambiental:** O papel do Brasil (e de MT) nas COPs, combate ao desmatamento na Amazônia e Pantanal, crise hídrica e ondas de calor extremos.\n- **Queimadas em MT:** Impactos no Pantanal, atuação da SEMA/Ibama, políticas de mitigação e fundo Amazônia.\n- **Economia Brasileira:** Reforma tributária, inflação, transição energética (hidrogênio verde, energia solar/eólica).\n- **Geopolítica:** Conflitos globais em andamento, reorganização de blocos econômicos (BRICS).\n\n## LEGISLAÇÃO ESPECÍFICA\n\n### 1. LC nº 112/2002 - Código de Ética do Servidor de MT\n- **Princípios:** Legalidade, Impessoalidade, Moralidade, Publicidade, Eficiência, Razoabilidade e Proporcionalidade.\n- **Deveres:** Zelar pelo patrimônio, urbanidade, assiduidade, sigilo profissional.\n- **Proibições:** Receber propina, usar o cargo para favorecimento, embriaguez habitual no serviço.\n- **Comissões de Ética:** Objetivo de orientar e aconselhar. A pena aplicável por essa comissão é a de **CENSURA** (decisão fundamentada e escrita).\n\n### 2. LC nº 04/1990 - Estatuto dos Servidores de MT\n- **Provimento:** Nomeação, Promoção, Readaptação, Reversão, Aproveitamento, Reintegração, Recondução.\n- **Estágio Probatório:** Avaliação de aptidão e capacidade para o cargo.\n- **Penalidades Disciplinares:** Advertência, Suspensão, Demissão, Cassação de aposentadoria, Destituição de cargo em comissão.\n- **Demissão:** Aplicada em casos de crime contra a administração pública, abandono de cargo (mais de 30 dias consecutivos), inassiduidade habitual (mais de 60 dias interpolados em 12 meses), improbidade administrativa.\n\n### 3. LC nº 38/1995 - Código Estadual do Meio Ambiente de MT\n- **Foco Central:** Política ambiental estadual de proteção, conservação e melhoria do meio ambiente.\n- **Competências da SEMA:** Fiscalizar, monitorar, licenciar e multar atividades poluidoras.\n- **Licenciamento Ambiental:** Instrumento da Política Estadual (Licença Prévia, de Instalação e de Operação - LP, LI, LO). É exigível para construção, instalação, ampliação e funcionamento de atividades poluidoras.\n- **Infrações:** A responsabilidade administrativa ambiental é autônoma (independe de dolo ou culpa, mas exige nexo causal).\n\n## Checklist de Revisão\n- [ ] Filosofia como busca racional e Tipos de conhecimento\n- [ ] Correntes epistemológicas (Racionalismo, Empirismo, Criticismo)\n- [ ] Pós-verdade, fake news, impacto da IA\n- [ ] Assédio moral e sexual no trabalho\n- [ ] Atitudes éticas no serviço público\n- [ ] Revisão de Atualidades (Meio ambiente, economia, MT)\n- [ ] LC nº 112/2002 (Código de Ética de MT - Focar na CENSURA)\n- [ ] LC nº 04/1990 (Estatuto - Provimento e Demissão/Abandono)\n- [ ] LC nº 38/1995 (Código Ambiental - Licenciamento LP, LI, LO)\n"}, {"id": "06-legislacao-ambiental", "title": "🌿 Legislação e Política Ambiental", "category": "Conhecimentos Transversais", "fileName": "06 - Legislação Ambiental (Transversal).md", "content": "---\ntags:\n  - legislacao-ambiental\n  - transversal\n  - especifico\n---\n\n# 🌿 Legislação e Política Ambiental (Conteúdo Transversal)\n\n> [!NOTE]\n> Este conteúdo é compartilhado por todos os perfis do cargo de Analista de Meio Ambiente e constitui a base legal da atuação do órgão. A atenção aos detalhes e competências é fundamental!\n\n## 1. Política Nacional do Meio Ambiente - Lei 6.938/81\n\nA PNMA é o marco regulatório do meio ambiente no Brasil, estabelecendo o SISNAMA e definindo a responsabilidade civil objetiva para danos ambientais.\n\n> [!TIP]\n> **O que a Cesgranrio cobra:**\n> A banca adora confundir os órgãos do SISNAMA (principalmente CONAMA vs. IBAMA) e listar instrumentos que NÃO são da PNMA. A responsabilidade civil objetiva é tema recorrente.\n\n- **Pontos-chave:**\n  - Institui o Sistema Nacional de Meio Ambiente (SISNAMA).\n  - Define o meio ambiente como patrimônio público a ser assegurado e protegido.\n  - Consagra a responsabilidade civil **objetiva** (independe de culpa) do poluidor.\n  - Prevê 13 instrumentos da PNMA (ex: zoneamento ambiental, licenciamento, avaliação de impactos, penalidades).\n  - Cria o Cadastro Técnico Federal (CTF).\n- **Artigos mais cobrados:** Art. 2º (Princípios), Art. 4º (Objetivos), Art. 6º (Estrutura do SISNAMA), Art. 9º (Instrumentos) e Art. 14, §1º (Responsabilidade objetiva).\n\n## 2. CF/88 Art. 225\n\nO artigo fundamental do meio ambiente na Constituição Federal, garantindo o direito a um meio ambiente ecologicamente equilibrado.\n\n> [!TIP]\n> **O que a Cesgranrio cobra:**\n> Competências (art. 23 e 24), a tríplice responsabilização (civil, penal e administrativa) e os deveres do Poder Público (incisos do §1º).\n\n- **Pontos-chave:**\n  - Meio ambiente é bem de uso comum do povo e essencial à sadia qualidade de vida.\n  - Impõe ao Poder Público e à coletividade o dever de defendê-lo e preservá-lo.\n  - Exigência de EIA/RIMA para obras/atividades potencialmente causadoras de significativa degradação.\n  - Tríplice responsabilidade para infratores (pessoas físicas ou jurídicas).\n  - Proteção especial para biomas como Floresta Amazônica, Mata Atlântica e Pantanal.\n- **Artigos mais cobrados:** Art. 225 (caput e parágrafos), Art. 23 (Competência Comum), Art. 24 (Competência Concorrente).\n\n## 3. Código Estadual do Meio Ambiente MT - LC 38/95\n\nInstitui a Política Estadual de Meio Ambiente e reestrutura o sistema ambiental em Mato Grosso.\n\n> [!TIP]\n> **O que a Cesgranrio cobra:**\n> Detalhes específicos sobre o licenciamento estadual e a estrutura do CONSEMA/MT.\n\n- **Pontos-chave:**\n  - Adapta as diretrizes nacionais à realidade do estado de MT.\n  - Define o papel da SEMA-MT como órgão executor.\n  - Estabelece as regras e infrações administrativas no estado.\n  - Instrumentos estaduais de proteção e controle.\n- **Artigos mais cobrados:** Estrutura do sistema estadual, competências do CONSEMA, procedimentos de licenciamento.\n\n## 4. LC 140/2011\n\nRegulamenta o Art. 23 da CF/88, definindo as regras de cooperação federativa nas ações administrativas decorrentes do exercício da competência comum.\n\n> [!TIP]\n> **O que a Cesgranrio cobra:**\n> A diferença entre atuação supletiva e subsidiária. Quem licencia o quê (critério do impacto e dominialidade).\n\n- **Pontos-chave:**\n  - O licenciamento é feito por um ÚNICO ente federativo.\n  - **Atuação Supletiva:** Substituição do ente originariamente competente que omite sua função.\n  - **Atuação Subsidiária:** Auxílio prestado ao ente originariamente competente.\n  - Define competências da União (impacto nacional/regional, mar territorial), Estados e Municípios (impacto local).\n- **Artigos mais cobrados:** Art. 7º (União), Art. 8º (Estados), Art. 9º (Municípios), Art. 14 e 15 (Atuação Supletiva e Subsidiária).\n\n## 5. Decreto 8.437/2015\n\nRegulamenta as tipologias de empreendimentos e atividades cujo licenciamento ambiental é de competência da União.\n\n> [!TIP]\n> **O que a Cesgranrio cobra:**\n> Listas exaustivas do que cabe ao IBAMA (ferrovias interestaduais, portos, energia nuclear).\n\n- **Pontos-chave:**\n  - Estabelece clareza sobre o alcance do Art. 7º da LC 140.\n  - Obras de infraestrutura de caráter nacional ou transfronteiriço.\n  - Rodovias federais, ferrovias nacionais, portos organizados.\n  - Empreendimentos no mar territorial e plataforma continental.\n- **Artigos mais cobrados:** Anexo (Tipologias) e Art. 3º e 4º.\n\n## 6. Lei de Crimes Ambientais - Lei 9.605/98\n\nDispõe sobre as sanções penais e administrativas derivadas de condutas e atividades lesivas ao meio ambiente.\n\n> [!TIP]\n> **O que a Cesgranrio cobra:**\n> Desconsideração da pessoa jurídica, os tipos de crimes (ex: fauna vs. flora) e a responsabilidade da Pessoa Jurídica (condições para aplicação).\n\n- **Pontos-chave:**\n  - Responsabilização penal da Pessoa Jurídica (exige que a infração seja cometida por decisão de seu representante, no interesse ou benefício da entidade).\n  - Tipologia dos crimes: Fauna, Flora, Poluição e outros, Ordenamento Urbano/Patrimônio Cultural e Administração Ambiental.\n  - Penas: privativas de liberdade, restritivas de direitos, multa.\n  - Possibilidade de transação penal e suspensão condicional do processo (crimes de menor potencial).\n- **Artigos mais cobrados:** Art. 2º a 4º (Responsabilidade da PJ), Art. 29 (Fauna), Art. 38 e afins (Flora), Art. 54 (Poluição).\n\n## 7. Política Nacional de Recursos Hídricos - Lei 9.433/97\n\nInstitui a Política Nacional de Recursos Hídricos e cria o Sistema Nacional de Gerenciamento de Recursos Hídricos (SINGREH).\n\n> [!TIP]\n> **O que a Cesgranrio cobra:**\n> Os fundamentos (água é bem de domínio público, dotada de valor econômico) e quem compõe os Comitês de Bacia.\n\n- **Pontos-chave:**\n  - Água: bem de domínio público; recurso natural limitado com valor econômico.\n  - Prioridade em situação de escassez: consumo humano e dessedentação de animais.\n  - Bacia hidrográfica como unidade territorial de gestão.\n  - Instrumentos: Planos, Outorga, Cobrança pelo uso, Enquadramento de corpos d'água, Sistema de Informação.\n- **Artigos mais cobrados:** Art. 1º (Fundamentos), Art. 5º (Instrumentos), Art. 11 a 18 (Outorga), Art. 37 a 39 (Comitês de Bacia).\n\n## 8. PNRS - Lei 12.305/10 (Resíduos Sólidos)\n\nEstabelece princípios, objetivos, instrumentos e diretrizes relativas à gestão integrada e ao gerenciamento de resíduos sólidos.\n\n> [!TIP]\n> **O que a Cesgranrio cobra:**\n> Diferença entre resíduo e rejeito, ordem de prioridade na gestão, logística reversa (produtos obrigatórios) e responsabilidade compartilhada.\n\n- **Pontos-chave:**\n  - Distinção: Resíduo (pode ser reaproveitado) vs. Rejeito (apenas disposição final ambientalmente adequada).\n  - Ordem de prioridade: não geração, redução, reutilização, reciclagem, tratamento e disposição final.\n  - Responsabilidade Compartilhada pelo ciclo de vida dos produtos.\n  - Logística Reversa: fabricantes, importadores, distribuidores e comerciantes (ex: pilhas, pneus, agrotóxicos).\n  - Planos de Resíduos Sólidos (nacional, estadual, microrregional, municipal).\n- **Artigos mais cobrados:** Art. 3º (Conceitos), Art. 9º (Prioridade), Art. 30 (Responsabilidade compartilhada), Art. 33 (Logística Reversa obrigatória).\n\n## 9. Saneamento - Lei 11.445/07 + Lei 14.026/20 (Novo Marco)\n\nEstabelece as diretrizes nacionais para o saneamento básico (abastecimento de água, esgotamento sanitário, limpeza urbana e manejo de resíduos sólidos, drenagem e manejo das águas pluviais urbanas).\n\n> [!TIP]\n> **O que a Cesgranrio cobra:**\n> As metas de universalização (2033), proibição de contratos de programa (exigência de licitação), e papel regulador da ANA.\n\n- **Pontos-chave:**\n  - Quatro componentes do saneamento básico.\n  - Metas de universalização até 2033 (99% com água potável e 90% com coleta e tratamento de esgotos).\n  - Agência Nacional de Águas e Saneamento Básico (ANA) define normas de referência para regulação.\n  - Regionalização da prestação dos serviços.\n- **Artigos mais cobrados:** Art. 2º (Princípios), Art. 3º (Definições), Art. 11-B (Metas de universalização).\n\n## 10. Segurança de Barragens - Lei 12.334/10\n\nEstabelece a Política Nacional de Segurança de Barragens (PNSB) e cria o Sistema Nacional de Informações sobre Segurança de Barragens (SNISB).\n\n> [!TIP]\n> **O que a Cesgranrio cobra:**\n> Quando uma barragem se enquadra na lei e a obrigatoriedade do Plano de Ação de Emergência (PAE).\n\n- **Pontos-chave:**\n  - Aplica-se a barragens com altura ≥ 15m, capacidade ≥ 3 milhões de m³, ou Dano Potencial Associado (DPA) alto/médio.\n  - Classificação feita por Risco (CRI) e Dano Potencial Associado (DPA).\n  - Plano de Ação de Emergência (PAE) obrigatório para DPA alto.\n  - Responsabilidade legal e financeira do empreendedor.\n- **Artigos mais cobrados:** Art. 1º (Aplicabilidade), Art. 7º e 8º (Classificação), Art. 11 e 12 (PAE).\n\n## 11. a 28. (Demais Legislações Resumidas)\n\n> [!NOTE]\n> Para fins práticos de estudo, foque nos conceitos centrais e instrumentos das normas a seguir.\n\n*   **Mudanças Climáticas (Lei 12.187/09 + LC 582/17 MT):** Foca em mitigação e adaptação. Instrumentos principais: Fundo Clima, mercado de carbono, metas voluntárias (e agora compromissos NDC).\n*   **Código Florestal (Lei 12.651/12):** Fundamental! Regras de APP (faixas marginais, topos de morro), Reserva Legal (80% na Amazônia Legal, 35% Cerrado, 20% demais biomas), CAR (registro público eletrônico obrigatório), e PRA.\n*   **SNUC (Lei 9.985/00):** Divisão em UCs de Proteção Integral (ex: Parque Nacional, Estação Ecológica - regra é preservação sem consumo) e Uso Sustentável (ex: APA, RESEX - admite exploração sustentável). Zona de amortecimento e Plano de Manejo.\n*   **SEUC MT (Lei 9.502/11):** Espelha o SNUC para a realidade mato-grossense, focando nas APAs estaduais e parques estaduais.\n*   **Biodiversidade (Lei 13.123/15):** Acesso ao patrimônio genético e conhecimento tradicional associado; repartição de benefícios. SisGen.\n*   **Proteção à Fauna (Lei 5.197/67):** Fauna silvestre é propriedade do Estado. Proibição geral de caça profissional, permissão de controle populacional sob autorização.\n*   **Outras Leis MT:** Serviços Ambientais, Pesca (regras específicas de defeso e apetrechos), Bacia Alto Paraguai (restrições a atividades no Pantanal), Educação Ambiental.\n*   **PSA (Lei 14.119/21):** Cria o pagamento por serviços ambientais (monetário ou não). Foco em produtores rurais que conservam áreas além do exigido por lei.\n*   **LAI e LGPD:** Transparência ativa e passiva nos dados ambientais; proteção de dados pessoais em processos sancionadores e licenciamento.\n*   **Regularização Ambiental (LC 592/17 MT):** Institui o Programa de Regularização Ambiental (PRA) estadual e o SIMCAR (sistema estadual).\n*   **Licenciamento Geral (Lei 15.190/25):** Nova lei estadual! Atenção às atualizações de prazos, licenças por adesão e compromisso (LAC), e ritos simplificados.\n*   **Manejo do Fogo (Lei 14.944/24):** Política de controle de queimadas, queima controlada vs. prescrita, brigadas.\n*   **Decreto 697/2020 e 1.268/2022 (MT):** Especificidades administrativas do rito de licenciamento dentro da SEMA/MT e cobrança de taxas.\n*   **Resolução CONSEMA 74/2025:** Define claramente o que é impacto local para fins de licenciamento pelos municípios de MT.\n*   **Recursos Hídricos MT:** Gestão das águas subterrâneas e processos de outorga estadual.\n"}, {"id": "07-licenciamento", "title": "🔍 Licenciamento e Fiscalização", "category": "Conhecimentos Transversais", "fileName": "07 - Licenciamento e Fiscalização Ambiental.md", "content": "---\ntags:\n  - licenciamento\n  - fiscalizacao\n  - transversal\n---\n\n# 🔍 Licenciamento e Fiscalização Ambiental\n\n> [!IMPORTANT]\n> Esta seção aborda o \"coração\" da rotina do Analista de Meio Ambiente. O conhecimento sobre as fases do licenciamento e os instrumentos de controle é exigência garantida na prova.\n\n## 1. Procedimentos de Licenciamento: LP, LI, LO\n\nO licenciamento ambiental é um procedimento administrativo complexo pelo qual o órgão ambiental competente licencia a localização, instalação, ampliação e operação de empreendimentos e atividades.\n\n- **Licença Prévia (LP):** \n  - Concedida na fase preliminar do planejamento.\n  - Aprova a localização e concepção, atestando a viabilidade ambiental.\n  - Estabelece os requisitos básicos para as próximas fases.\n  - **Validade máxima:** 5 anos.\n- **Licença de Instalação (LI):**\n  - Autoriza a instalação do empreendimento de acordo com as especificações constantes dos planos aprovados.\n  - **Validade máxima:** 6 anos.\n- **Licença de Operação (LO):**\n  - Autoriza a operação da atividade após a verificação do cumprimento do que consta nas licenças anteriores (LP e LI) e o funcionamento das medidas de controle ambiental.\n  - **Validade máxima:** 10 anos (Mínima de 4 anos).\n- **Renovação:** Deve ser requerida com antecedência mínima de **120 dias** da expiração de seu prazo de validade (garante a prorrogação automática até a manifestação definitiva do órgão).\n\n## 2. EIA/RIMA (Estudo de Impacto Ambiental e respectivo Relatório)\n\nExigido para atividades com **significativa degradação ambiental** (Art. 225, §1º, IV, CF).\n\n- **EIA (Estudo):** Documento técnico profundo, elaborado por equipe multidisciplinar. Analisa diagnósticos (meio físico, biótico e socioeconômico), impactos, medidas mitigadoras e compensatórias.\n- **RIMA (Relatório):** A versão traduzida e acessível do EIA, elaborada em linguagem clara, objetiva e adequada à compreensão da sociedade, contendo a conclusão técnica.\n- **Publicidade e Participação:** É obrigatória a publicidade do RIMA. Caso solicitado pelo órgão, MP, ou 50 cidadãos, deverá ocorrer Audiência Pública.\n\n## 3. Tipos de Licenças e Processo (Geral)\n\n- **Audiências Públicas:** Instrumento de participação popular. Tem caráter consultivo (não vinculante).\n- **Compensação Ambiental:** Obrigatória em casos de EIA/RIMA (Lei do SNUC). O valor é destinado a unidades de conservação de proteção integral (não pode ser inferior a 0,5% do valor da obra - STF declarou inconstitucional o percentual fixo, deve ser proporcional ao impacto).\n- **Condicionantes:** Obrigações fixadas nas licenças que o empreendedor deve cumprir. O descumprimento pode gerar suspensão ou cancelamento da licença, além de multas.\n\n## 4. Estudos Ambientais (Além do EIA)\n\n- **RAS (Relatório Ambiental Simplificado):** Usado para licenciamento de atividades de pequeno potencial de impacto ambiental (ex: energia eólica e PCHs sob certas condições).\n- **PCA (Plano de Controle Ambiental):** Detalha as medidas mitigadoras durante a LI (geralmente exigido em atividades minerárias).\n- **RCA (Relatório de Controle Ambiental):** Alternativa ao EIA para atividades minerárias sem significativo impacto.\n- **PGRS (Plano de Gerenciamento de Resíduos Sólidos):** Instrumento da PNRS, descreve as ações relativas ao manejo dos resíduos gerados.\n- **PRAD (Plano de Recuperação de Áreas Degradadas):** Exigido para projetos de mineração, desmatamento ilegal, ou sempre que houver degradação que exija restauração das características ecológicas originais.\n- **EVTEA (Estudo de Viabilidade Técnica, Econômica e Ambiental):** Normalmente exigido em infraestrutura de transportes para análise de viabilidade inicial.\n\n## 5. Outorga de Recursos Hídricos (Decreto 336/07)\n\nA outorga não dá a propriedade da água, mas o direito de uso por prazo determinado.\n\n- **Uso sujeito a outorga:** Captação de água (superficial/subterrânea), lançamentos de efluentes que alterem quantidade/qualidade, barramentos, aproveitamento hidrelétrico.\n- **Uso INDEPENDENTE de outorga:** Usos insignificantes, satisfação de necessidades de pequenos núcleos populacionais dispersos, captações de volume reduzido.\n- **Prazo máximo:** 35 anos, renovável.\n- **Competência:** ANA (rios federais/transfronteiriços) ou Órgão Estadual (ex: SEMA-MT para rios estaduais e águas subterrâneas).\n\n## 6. Fiscalização Ambiental\n\n- **Poder de Polícia:** O órgão ambiental tem o poder de restringir direitos em prol do interesse público ambiental (fiscalizar, autuar, embargar).\n- **Autos de Infração:** Peça que inicia o processo administrativo sancionador. Deve descrever clara e objetivamente a infração e a norma violada.\n- **Sanções:** Multas (simples ou diária), embargo de obra, apreensão de animais/produtos/equipamentos, suspensão de atividades.\n- A fiscalização ocorre de forma repressiva, mas também tem caráter orientador.\n\n## 7. Resíduos Sólidos e Drenagem\n\n- **Resíduos:** A disposição em lixões é terminantemente proibida. Exigência de aterros sanitários adequados e sistemas de tratamento (compostagem, biogás, reciclagem).\n- **Drenagem Urbana (Macrodrenagem vs. Microdrenagem):**\n  - *Microdrenagem:* Coleta de águas pluviais em pequenos lotes e ruas (bocas de lobo, galerias).\n  - *Macrodrenagem:* Canais principais, rios canalizados e grandes bacias de detenção/retenção urbanas (piscinões) que recebem a água da microdrenagem.\n\n## 9. Medidas Compensatórias e TAC\n\n- **TAC (Termo de Ajustamento de Conduta):** Instrumento com força de título executivo extrajudicial. O empreendedor se compromete a adequar sua conduta às exigências legais, sob pena de multas, em troca da paralisação de ações civis e adequação progressiva.\n\n## 10. Resoluções CONAMA Fundamentais\n\n- **CONAMA 001/86:** Dispõe sobre as diretrizes gerais e os casos em que se exige EIA/RIMA (ex: estradas, ferrovias, portos, aeroportos, aterros de resíduos tóxicos, usinas, grandes hidrelétricas).\n- **CONAMA 237/97:** O \"código de processo\" do licenciamento. Define conceitos de LP, LI, LO, prazos, e a lista exemplificativa (Anexo 1) de atividades sujeitas a licenciamento.\n- **CONAMA 009/87:** Trata das Audiências Públicas no processo de licenciamento ambiental (forma de convocação, finalidade).\n"}, {"id": "08-recursos-clima", "title": "🌍 Recursos Naturais, Poluição e Clima", "category": "Conhecimentos Transversais", "fileName": "08 - Recursos Naturais, Poluição e Clima.md", "content": "---\ntags:\n  - recursos-naturais\n  - poluicao\n  - clima\n  - transversal\n---\n\n# 🌍 Recursos Naturais, Poluição e Mudanças Climáticas\n\n> [!WARNING]\n> Esta disciplina exige conhecimentos técnicos integrados: ecologia básica aplicada, noções de química e processos de contaminação e remediação, aliados ao contexto global e de gestão.\n\n## Recursos Naturais e Biodiversidade\n\n- **Gestão de Florestas e Uso Sustentável:**\n  - O manejo florestal sustentável exige a elaboração de Planos de Manejo (PMFS) para garantir que a taxa de extração seja inferior à capacidade de regeneração natural.\n  - **CAR (Cadastro Ambiental Rural):** Instrumento central para controle do desmatamento. É obrigatório e auto declaratório, base para adequação ambiental das propriedades (APP e RL).\n- **UCs (Unidades de Conservação):** Corredores ecológicos e mosaicos são ferramentas para conectar UCs e evitar o isolamento genético da fauna e flora.\n\n## Poluição e Controle Ambiental\n\n- **Poluição Atmosférica (CONAMA 506/24):** \n  - Foco em material particulado (MP10, MP2.5), SOx, NOx, O3, CO.\n  - PADRÕES de Qualidade do Ar: estabelecem os limites máximos de poluentes suportáveis para não afetar a saúde (primários) e o bem-estar (secundários).\n- **Poluição Hídrica e Efluentes (CONAMA 430/11):**\n  - Estabelece as condições e padrões de lançamento de efluentes.\n  - Exige que o efluente seja tratado de forma a não alterar a classe de enquadramento do corpo d'água receptor.\n- **Qualidade do Solo e Remediação (CONAMA 420/09):**\n  - Define Valores de Referência, Prevenção e Intervenção para substâncias químicas no solo.\n  - *Áreas contaminadas:* Passam por etapas de Avaliação Preliminar, Investigação Confirmatória, Investigação Detalhada e Avaliação de Risco.\n  - *Remediação:* Técnicas como biorremediação, extração de vapores, \"pump and treat\" (bombear e tratar água subterrânea).\n\n## Mudanças Climáticas\n\n- **Causas e Impactos:** \n  - Emissões de GEE (CO2, CH4, N2O) por desmatamento, agropecuária e queima de combustíveis fósseis.\n  - Impactos esperados no Brasil: aumento de secas no Nordeste e Amazônia, eventos extremos de precipitação no Sul/Sudeste.\n- **Instrumentos Econômicos e Mercado de Carbono:**\n  - *Créditos de carbono:* Certificados que equivalem a 1 tonelada de CO2 equivalente (tCO2e) evitada ou sequestrada (ex: REDD+).\n- **Sustentabilidade e Agenda 2030 (ODS):** \n  - 17 Objetivos de Desenvolvimento Sustentável. Destaque para ODS 6 (Água), 13 (Ação Climática), 14 (Vida na Água) e 15 (Vida Terrestre).\n- **Economia Circular:** Modelo focado em \"reduzir, reutilizar, recuperar e reciclar\", mantendo produtos, componentes e materiais em seu mais alto nível de utilidade (contrário da economia linear \"extrair-produzir-descartar\").\n\n## Análise e Gerenciamento de Riscos\n\n- **NBR ISO 31000:2018:**\n  - Diretrizes para gestão de riscos. Baseia-se no processo: Comunicação e Consulta, Escopo/Contexto, Avaliação de Riscos (Identificação, Análise e Avaliação), Tratamento, Monitoramento.\n- **Técnicas de Estudo de Risco:**\n  - *APR (Análise Preliminar de Risco):* Qualitativa, feita no início de projetos.\n  - *HAZOP (Hazard and Operability Study):* Detalhada, usa \"palavras-guia\" para identificar desvios em processos contínuos.\n  - *FMEA/FMECA:* Foco na falha de equipamentos/componentes e seus efeitos.\n- **PGR e PEI:**\n  - *PGR (Programa de Gerenciamento de Riscos):* Foco na prevenção contínua.\n  - *PEI (Plano de Emergência Individual - CONAMA 398/08):* Foco em acidentes com óleo e poluição hídrica; visa pronta resposta e minimização de danos.\n\n## Planejamento e Gestão Pública\n\n- O orçamento público no Brasil segue 3 leis principais de iniciativa do Executivo:\n  1. **PPA (Plano Plurianual):** Diretrizes, objetivos e metas para 4 anos (inicia no 2º ano de mandato).\n  2. **LDO (Lei de Diretrizes Orçamentárias):** Anual. Faz a ponte entre PPA e LOA, definindo prioridades, metas anuais e regras sobre a dívida/pessoal.\n  3. **LOA (Lei Orçamentária Anual):** O orçamento propriamente dito, que estima as receitas e fixa as despesas (Lei 4.320/64).\n- **LRF (LC 101/00):** Estabelece normas de finanças públicas voltadas para a responsabilidade e controle de gastos (limites de endividamento e despesa com pessoal).\n\n## Pesquisa e Informação Ambiental\n\n- **SIG (Sistemas de Informação Geográfica) e Geoprocessamento:**\n  - Ferramentas cruciais para monitoramento ambiental, fiscalização remota, zoneamento ecológico-econômico e CAR. \n  - *Sensoriamento Remoto:* Uso de imagens de satélite para detectar desmatamento e queimadas.\n- **Estatística e Inventários:** \n  - Utilizados para monitoramento da qualidade do ar/água, levantamentos populacionais da fauna (censo) e inventários florestais (cálculo de biomassa e volume de madeira).\n\n## Ética e Ouvidoria\n\n- **Ética Pública:** \n  - Pautada pelos princípios do Art. 37 da CF (LIMPE - Legalidade, Impessoalidade, Moralidade, Publicidade, Eficiência).\n  - O servidor público não decide apenas entre o legal e o ilegal, o justo e o injusto, mas também entre o **honesto e o desonesto**.\n- **Ouvidoria e Participação Social:**\n  - A ouvidoria atua no diálogo entre o cidadão e a administração pública (recebendo denúncias, reclamações, elogios, sugestões).\n  - Promove o controle social e a melhoria na prestação dos serviços públicos ambientais.\n"}, {"id": "09-geotecnia", "title": "🏗️ Geotecnia e Obras de Terra", "category": "Engenharia Civil", "fileName": "09 - Geotecnia e Obras de Terra.md", "content": "---\ntags:\n  - geotecnia\n  - fundacoes\n  - terraplenagem\n  - especifico-eng\n---\n# 🏗️ Geotecnia e Obras de Terra\n\n> [!NOTE]\n> Este assunto faz parte dos **Conhecimentos Específicos Direcionados** (40 questões na prova).\n\n## 1. Topografia\n### Conceitos-chave\n- **Planimetria:** Medição de projeções horizontais (distâncias horizontais, ângulos horizontais).\n- **Altimetria:** Medição de distâncias verticais e diferenças de nível (cotas, altitudes).\n- **Nivelamento:** \n  - *Geométrico:* Uso de nível e mira (mais preciso).\n  - *Trigonométrico:* Uso de teodolito/estação total e distanciômetro.\n- **Curvas de nível:** Linhas que unem pontos de mesma cota. Quanto mais próximas, mais íngreme o terreno.\n- **GPS e Estação Total:** Equipamentos modernos para levantamentos de alta precisão.\n\n> [!TIP] Dica de Prova\n> Diferencie bem planimetria (eixos X e Y) de altimetria (eixo Z). Em nivelamento geométrico, o erro de fechamento é distribuído proporcionalmente às distâncias.\n\n## 2. Mecânica dos Solos\n### Índices Físicos e Classificação\n- **Índices Físicos:** Porosidade ($n$), índice de vazios ($e$), grau de saturação ($S$), teor de umidade ($w$). $S \\cdot e = w \\cdot G_s$.\n- **Classificação:**\n  - **SUCS** (Sistema Unificado): Usa granulometria e Limites de Atterberg. Letras (G: cascalho, S: areia, M: silte, C: argila, O: orgânico, W: bem graduado, P: mal graduado, H: alta plasticidade, L: baixa plasticidade).\n  - **TRB/HRB** (Rodoviário): Classifica de A-1 a A-7.\n- **Compactação (Proctor):** Busca-se a umidade ótima para a densidade máxima seca.\n- **Permeabilidade:** Lei de Darcy ($v = k \\cdot i$). Ensaios de carga constante (solos granulares) e variável (argilas).\n- **Adensamento:** Redução de volume pela expulsão da água ao longo do tempo (típico de argilas saturadas).\n- **Resistência ao Cisalhamento (Mohr-Coulomb):** $\\tau = c + \\sigma \\cdot \\tan(\\phi)$. \n- **Tensões e Empuxos:** Tensão total = Tensão Efetiva + Poro-pressão ($\\sigma = \\sigma' + u$). Empuxo ativo (solo expande), passivo (solo comprimido), repouso.\n\n## 3. Obras de Terra\n- **Barragens de terra:** Uso de materiais argilosos (núcleo impermeável) e granulares. \n- **Filtros e Drenos:** Evitam o *piping* (erosão interna) e reduzem a poro-pressão a jusante, usando as regras de Terzaghi (granulometria).\n- **Aterros e Diques:** Estruturas lineares de contenção e elevação.\n\n## 4. Obras de Contenção\n- **Muros de gravidade:** Usam o próprio peso para resistir ao empuxo (concreto ciclópico, gabião, flexão em concreto armado).\n- **Cortinas atirantadas e solo grampeado:** Técnicas que usam inclusões no solo (tirantes pré-tensionados ou chumbadores passivos).\n- **Gabião:** Gaiolas de malha de aço preenchidas com pedras, altamente drenantes e flexíveis.\n\n## 5. Fundações\n- **Rasas/Diretas:** Transmitem a carga pela base. Sapatas (isolada, corrida), radier (laje única), blocos.\n- **Profundas:** Transmitem carga pela base e atrito lateral. \n  - *Estacas:* Pré-moldadas, Franki (base alargada), Strauss, hélice contínua.\n  - *Tubulões:* Base alargada, executados a céu aberto (secos) ou sob ar comprimido (com lençol freático).\n- **SPT (Standard Penetration Test):** Ensaio de percussão (N_SPT), a cada metro. O N é o nº de golpes pros últimos 30cm.\n- **Capacidade de carga e recalques:** Cálculo por Terzaghi. Recalques diferenciais geram fissuras.\n\n## 6. Terraplenagem\n- **Processos:** Corte, transporte, aterro e compactação.\n- **Diagrama de Brückner (Massas):** Gráfico de volumes acumulados. Subidas indicam corte, descidas indicam aterro. \n- A linha de distribuição e momento de transporte são cruciais.\n\n## 7. Jazidas e Bota-fora\n- **Jazidas:** Locais de extração de material para aterro.\n- **Bota-fora:** Locais de descarte de material inadequado ou excedente.\n- Necessário controle ambiental rigoroso e recuperação de áreas degradadas (PRAD).\n\n## 8. Equipamentos\n- **Escavadeiras:** Escavação de baixo para cima ou em profundidade.\n- **Pá carregadeira:** Carregamento de material solto.\n- **Motoniveladora (Patrol):** Espalhamento, nivelamento e corte superficial.\n- **Rolo compactador:** Pé-de-carneiro (argilas), liso (areias/acabamento), pneumático.\n\n## NBRs Relevantes\n- **NBR 6122:** Projeto e execução de fundações.\n- **NBR 11682:** Estabilidade de encostas.\n- **NBR 6484:** Sondagem de simples reconhecimento com SPT.\n- **NBR 5629:** Estruturas atirantadas.\n\n## Checklist de Revisão\n- [ ] Entender a fórmula dos índices físicos e classificação HRB e SUCS.\n- [ ] Diferenciar os ensaios SPT e as propriedades de argilas vs areias.\n- [ ] Compreender métodos de compactação e umidade ótima.\n- [ ] Interpretar o Diagrama de Brückner.\n- [ ] Decorar os tipos de fundações rasas e profundas.\n"}, {"id": "10-materiais", "title": "🧱 Materiais e Tecnologia da Construção", "category": "Engenharia Civil", "fileName": "10 - Materiais e Tecnologia da Construção.md", "content": "---\ntags:\n  - materiais\n  - construcao\n  - patologia\n  - especifico-eng\n---\n# 🧱 Materiais e Tecnologia da Construção\n\n## 1. Materiais de Construção\n- **Concreto:** Mistura de cimento, água, agregados (miúdo/areia, graúdo/brita).\n  - *Dosagem (Traço):* Proporção dos materiais. Fator a/c (água/cimento) afeta diretamente a resistência.\n  - *Cura:* Fundamental para hidratação do cimento, evita retração.\n- **Aço:** CA-50 (f_{yk} = 500 MPa, nervurado) e CA-60 (f_{yk} = 600 MPa, liso/entalhado).\n- **Madeira:** Material anisotrópico. Resistência varia com a direção das fibras.\n- **Alvenaria, Argamassa, Cerâmica:** Argamassas têm aglomerante e agregado miúdo. Tijolos e blocos cerâmicos.\n- **Polímeros e Vidro:** Tintas, PVC, impermeabilizantes.\n\n## 2. Controle Tecnológico\n- **Slump test (Abatimento):** Mede a consistência e trabalhabilidade do concreto fresco.\n- **Compressão (CPs):** Ensaios de corpos de prova (cilíndricos no Brasil) aos 28 dias para obter o $f_{ck}$.\n- **Rastreabilidade:** Controle de lotes de aço, concreto e outros para garantir qualidade (PBQP-H).\n\n## 3. Tecnologia das Construções e 4. Canteiro de Obras\n- **Etapas:** Serviços preliminares $\\rightarrow$ fundação $\\rightarrow$ estrutura $\\rightarrow$ vedações $\\rightarrow$ instalações $\\rightarrow$ acabamentos.\n- **Canteiro (NR-18):** Planejamento físico, fluxo de materiais e pessoas. Instalações provisórias (refeitório, vestiário, almoxarifado). \n- **Logística:** Gruas, elevadores de cremalheira, gruas de torre.\n\n## 5. Recebimento e Controle\n- Inspeção visual, ensaios de recebimento, armazenamento em pilhas adequadas.\n- **Cimento:** Local seco, empilhado em estrados (máx. 10 sacos).\n\n## 6. Sistemas Construtivos\n- **Concreto armado:** Boa resistência à compressão (concreto) e tração (aço).\n- **Concreto protendido:** Aço pré-tensionado para comprimir o concreto e evitar fissuração, permitindo grandes vãos.\n- **Alvenaria estrutural:** Blocos resistem às cargas; não usa vigas e pilares tradicionais. Paredes não podem ser removidas.\n- **Steel Frame / Wood Frame:** Construção a seco, leve e rápida.\n- **Pré-moldados:** Peças fabricadas fora do local de uso final. Agilidade, menor desperdício.\n\n## 7. Patologia e Manutenção\n- **Corrosão de armadura:** Oxidação do aço gera aumento de volume e expulsa o cobrimento. Causa: carbonatação ou íons cloreto.\n- **Fissuras:** Devido a retração, recalque diferencial, variações térmicas ou esforços excessivos.\n- **Eflorescência:** Manchas brancas na superfície por sais solúveis levados pela água.\n- **Carbonatação:** Redução do pH do concreto pelo CO2 do ar, despassivando a armadura.\n- **RAA (Reação Álcali-Agregado):** Reação química expansiva no concreto.\n- **Manutenção:** Preventiva (programada) vs. Corretiva (após falha). NBR 5674.\n\n## 8. Reformas e Retrofit\n- **Reforço Estrutural:** Uso de fibra de carbono, chapa colada, aumento de seção.\n- **Retrofit:** Modernização e adequação tecnológica, mantendo a arquitetura/estrutura original.\n\n## 9. Resistência dos Materiais\n- **Tensão ($\\sigma$):** Força por unidade de área.\n- **Deformação ($\\epsilon$):** Variação de comprimento relativa.\n- **Lei de Hooke:** $\\sigma = E \\cdot \\epsilon$ (E = Módulo de Elasticidade).\n- **Esforços:** Tração/Compressão (axial), Cisalhamento (cortante), Flexão (momento fletor, fibras tracionadas e comprimidas), Torção, Flambagem (peças esbeltas comprimidas).\n\n## NBRs Relevantes\n- **NBR 12655:** Concreto de cimento Portland – Preparo, controle, recebimento.\n- **NBR 15575:** Norma de Desempenho (vida útil, acústica, térmica).\n- **NBR 6136 e 15961:** Alvenaria estrutural.\n- **NBR 5674:** Manutenção de edificações.\n\n## Checklist de Revisão\n- [ ] Relembrar a influência do fator a/c na resistência e porosidade do concreto.\n- [ ] Entender a diferença entre alvenaria de vedação e estrutural.\n- [ ] Conhecer as patologias ligadas à corrosão (carbonatação e cloretos).\n- [ ] Revisar diagramas tensão-deformação e os módulos (Hooke, escoamento, ruptura).\n"}, {"id": "11-projetos-estruturas", "title": "📐 Projetos, Instalações e Estruturas", "category": "Engenharia Civil", "fileName": "11 - Projetos, Instalações e Estruturas.md", "content": "---\ntags:\n  - projetos\n  - instalacoes\n  - estruturas\n  - especifico-eng\n---\n# 📐 Projetos, Instalações e Estruturas\n\n## PARTE 1: PROJETOS E INSTALAÇÕES\n\n### 1. Projetos de Obras Civis\n- Compatibilização de projetos (BIM é essencial).\n- Envolve projetos de arquitetura, fundações, estrutura, instalações (MEP - Mecânica, Elétrica, Hidráulica).\n\n### 2. Instalações Hidrossanitárias (NBR 5626, NBR 8160, NBR 10844)\n- **Água fria e quente:** Pressão estática máxima (40 m.c.a) e dinâmica mínima. Uso do método dos pesos (Hunter) para vazão de projeto.\n- **Esgoto:** Uso de fecho hídrico (sifão, ralo sifonado) para evitar retorno de gases. Ventilação sanitária é obrigatória.\n- **Águas Pluviais:** Dimensionamento de calhas e condutores usando a chuva de projeto (Tempo de Retorno e Intensidade).\n\n### 3. Instalações Elétricas (NBR 5410)\n- **Critérios de dimensionamento:** Capacidade de condução de corrente, queda de tensão admissível.\n- **Componentes:** Disjuntores termomagnéticos (proteção contra curto e sobrecarga), DR (Diferencial Residual - choque elétrico), DPS (Surtos).\n- **Aterramento:** Sistemas TN, TT, IT. O TN-S (neutro e proteção separados) é um dos mais usados.\n\n### 4. Instalações de Gás (NBR 15526, NBR 13523)\n- **GLP (Gás Liquefeito de Petróleo):** Mais pesado que o ar. Recipientes em área externa e ventilada.\n- **GN (Gás Natural):** Mais leve que o ar. \n\n### 5. Prevenção e Combate a Incêndio (PPCI)\n- **Componentes:** Extintores, hidrantes, mangotinhos, chuveiros automáticos (*sprinklers*).\n- **SPDA (Para-raios):** NBR 5419. Gaiola de Faraday, método de Franklin, esfera rolante.\n- **Rotas de Fuga:** NBR 9077. Portas corta-fogo, sinalização, escadas enclausuradas.\n\n### 6. Obras de Arte Especiais\n- **Pontes e Viadutos:** Superestrutura (tabuleiro), mesoestrutura (pilares) e infraestrutura (fundações). \n- Sujeitos a cargas móveis (Linhas de Influência - Trem tipo).\n\n---\n\n## PARTE 2: ESTRUTURAS\n\n### 1. Concreto Armado (NBR 6118)\n- **Domínios de deformação:** Domínio 2 (aço escoa, concreto não rompe), Domínio 3 (ruptura simultânea ou aço escoa e concreto rompe - o ideal), Domínio 4 (concreto rompe sem escoamento do aço - frágil, evitar!).\n- **Cobrimento:** Protege a armadura (varia com a Classe de Agressividade Ambiental).\n- **Esforços:** \n  - Flexão: Armadura longitudinal.\n  - Cisalhamento: Estribos (armadura transversal).\n\n### 2. Estruturas Metálicas (NBR 8800) e Mistas\n- Aço estrutural (ASTM A36, A572).\n- Ligações por solda (filete, penetração) ou parafusos (alta resistência, AR).\n- **Mistas:** Viga de aço + Laje de concreto conectadas por *stud bolts* (conectores de cisalhamento). \n\n### 3. Mecânica das Estruturas e Análise\n- **Equilíbrio da estática:** $\\sum F_x = 0$, $\\sum F_y = 0$, $\\sum M = 0$.\n- **Vínculos:** Apoios de 1º grau (móvel), 2º grau (fixo), 3º grau (engaste).\n- **Diagramas:**\n  - N (Normal): Tração e compressão.\n  - V ou Q (Cortante): Variação linear em carga distribuída, constante em cargas pontuais.\n  - M (Momento Fletor): Máximo onde a cortante é zero.\n- **Estruturas Isostáticas:** Resolvidas por equações de equilíbrio.\n- **Estruturas Hiperestáticas:** Requerem métodos como Processo de Cross, Método das Forças, Método dos Deslocamentos.\n\n## NBRs Relevantes\n- **NBR 6118:** Projeto de estruturas de concreto.\n- **NBR 8800:** Estruturas de aço e estruturas mistas de aço e concreto.\n- **NBR 6120:** Cargas para cálculo de estruturas.\n- **NBR 8681:** Ações e segurança nas estruturas.\n\n## Checklist de Revisão\n- [ ] Compreender os limites de pressão na rede de água fria.\n- [ ] Diferenciar os disjuntores, DR e DPS nas instalações elétricas.\n- [ ] Revisar cálculo de reações de apoio de vigas biapoiadas e engastadas.\n- [ ] Entender perfeitamente os Domínios de deformação (especialmente 2 e 3) do concreto armado.\n"}, {"id": "12-orcamento", "title": "💰 Orçamento, Planejamento e Fiscalização", "category": "Engenharia Civil", "fileName": "12 - Orçamento, Planejamento e Fiscalização de Obras.md", "content": "---\ntags:\n  - orcamento\n  - planejamento\n  - fiscalizacao\n  - obras\n  - especifico-eng\n---\n# 💰 Orçamento, Planejamento e Fiscalização de Obras\n\n> [!IMPORTANT]\n> Este é um dos temas MAIS cobrados pela Cesgranrio. O domínio das metodologias e legislações é fundamental.\n\n## 1. Orçamento de Obras\nA elaboração do orçamento envolve o levantamento das quantidades e a determinação dos custos diretos e indiretos.\n- **Composição de Custos Unitários**: Define o custo de cada serviço com base nos insumos de **Material, Mão de obra e Equipamento**.\n- **CUB (Custo Unitário Básico)**: Índice publicado pelos Sinduscons.\n- **SINAPI e SICRO**: Principais sistemas de referência de custos (SINAPI para obras civis, SICRO para infraestrutura/transportes).\n- **Orçamento Sintético**: Resumo dos serviços principais.\n- **Orçamento Analítico**: Detalhamento com as composições unitárias.\n\n## 2. BDI (Benefícios e Despesas Indiretas)\nO BDI cobre custos que não podem ser diretamente atribuídos a serviços específicos.\n- **Composição**: Administração central, lucro (remuneração), impostos, riscos e despesas financeiras.\n- **Acórdão TCU 2622/2013**: Define faixas aceitáveis para as taxas de BDI conforme a tipologia da obra.\n\n### Fórmulas Importantes\n$$ BDI = \\left[ \\frac{(1 + AC + S + R + G)(1 + DF)(1 + L)}{1 - I} - 1 \\right] \\times 100 $$\n*(Onde: AC = Administração Central, S = Seguros, R = Riscos, G = Garantias, DF = Despesas Financeiras, L = Lucro, I = Impostos)*\n\n## 3. Encargos Sociais\nCustos incidentes sobre a folha de pagamento da mão de obra.\n- **Composição**: Encargos básicos (INSS, FGTS), trabalhistas (férias, 13º, rescisão), indenizatórios e taxas de incidência.\n- **Horistas vs. Mensalistas**: Horistas possuem taxas de encargos maiores devido a repouso remunerado e outras particularidades não incorporadas no salário base.\n\n## 4. Planejamento de Obras\n- **WBS / EAP (Estrutura Analítica do Projeto)**: Decomposição hierárquica do trabalho.\n- **Caminho Crítico**: Sequência de atividades com folga zero. Um atraso nestas atrasa a obra inteira.\n\n## 5. Cronogramas e Redes\n- **Gantt**: Gráfico de barras simples e intuitivo.\n- **PERT/CPM**: Método das setas ou blocos para calcular durações e folgas. Foca em prazos.\n- **Redes de Atividades**: Representação gráfica de predecessoras e sucessoras.\n\n## 6. Curvas de Controle\n- **Curva S**: Gráfico acumulado do avanço físico e/ou financeiro ao longo do tempo.\n- **Curva ABC**: Classificação de insumos/serviços pelo seu peso financeiro (A: mais importantes, C: menos).\n\n## 7. Fluxo de Caixa\n- Projeção de entradas e saídas de recursos durante a obra. Fundamental para a viabilidade e gestão financeira.\n\n## 8. Acompanhamento e Controle\n- **Controle Físico-Financeiro**: Comparação entre planejado e realizado (medido).\n- **Medições**: Aferição in loco do que foi efetivamente executado.\n\n## 9. Licitações e Contratos (Lei 14.133/2021)\n- **Modalidades**: Concorrência, Concurso, Leilão, Pregão e Diálogo Competitivo.\n- **Critérios de Julgamento**: Menor preço, maior desconto, técnica e preço, etc.\n- **Garantias**: Podem chegar a 5% (regra) ou 10% (obras de grande vulto e complexidade técnica), em seguro, fiança ou caução.\n\n## 10. Medição de Obras e Boletim\n- **Critérios de Medição**: Definidos no edital/contrato. Como se mede a alvenaria? Desconta vãos?\n- **Boletim de Medição**: Documento base para a emissão da nota fiscal e faturamento.\n\n## 11. Fiscalização\n- **Atribuições**: O fiscal garante a conformidade ao projeto, especificações e normas.\n- **Diário de Obra**: Registro obrigatório e oficial das ocorrências diárias (clima, efetivo, avanços).\n- **Ensaios**: Conferência de controle tecnológico.\n\n## 12. Aditivos Contratuais e Reequilíbrio\n- **Limites (Lei 14.133)**: Acréscimos de até 25% (regra) ou 50% (reformas em edifícios/equipamentos).\n- **Reajustamento**: Atualização prevista para corrigir inflação baseada em índices.\n- **Reequilíbrio Econômico-Financeiro**: Em caso de fatos imprevisíveis que afetem a álea econômica.\n\n## 13. Perícias e Laudos\n- **Perito**: Nomeado pelo juiz, isento.\n- **Assistente Técnico**: Contratado pelas partes.\n- **Quesitos**: Perguntas técnicas que o perito deve responder.\n\n## 14. Sistema Internacional (SI)\n- Compreensão das unidades e conversões essenciais (MPa para kgf/cm², etc).\n\n## 15. Qualidade: PBQP-H e ISO 9001\n- Sistemas de gestão para melhorar processos, qualificar materiais e reduzir perdas.\n\n## 16. Produtividade\n- **TCPO**: Tabelas de Composições de Preços para Orçamentos (Pini).\n- **RUP**: Razão Unitária de Produção. (homem-hora/unidade de serviço).\n\n## 17. Decreto 7.983/2013\n- Regulamenta a elaboração dos orçamentos para contratação de obras pela União (usando SINAPI, SICRO, critérios de BDI, etc.).\n\n---\n## Checklist de Estudos\n- [ ] Entender a composição e fórmulas do BDI e Encargos\n- [ ] Diferenciar SINAPI e SICRO\n- [ ] Ler a Nova Lei de Licitações focada em obras e engenharia\n- [ ] Calcular caminho crítico em um PERT/CPM\n- [ ] Interpretar a Curva ABC e a Curva S\n"}, {"id": "13-avaliacao", "title": "🏠 Avaliação Imobiliária (NBR 14653/AVM)", "category": "Engenharia Civil", "fileName": "13 - Avaliação Imobiliária.md", "content": "---\ntags:\n  - avaliacao\n  - imoveis\n  - nbr14653\n  - especifico-eng\n---\n# 🏠 Avaliação Imobiliária\n\n> [!WARNING]\n> Tópicos modernos como AVM (Automated Valuation Models) e Machine Learning são novidades em editais recentes e requerem atenção especial para questões conceituais!\n\n## 1. NBR 14.653 (Avaliação de Bens)\nNorma fundamental para avaliações:\n- **Parte 1 (Procedimentos Gerais)**: Define o valor de mercado, valor em risco, custo de reprodução e reposição.\n- **Parte 2 (Imóveis Urbanos)**: Especifica os métodos de avaliação para áreas urbanas e os graus de fundamentação/precisão.\n- **Parte 3 (Imóveis Rurais)**: Adapta os conceitos à produtividade e uso da terra.\n- **Parte 4 (Empreendimentos)**: Avaliação de base de fluxo de caixa e potencial comercial.\n\n## 2. Métodos de Avaliação\n- **Comparativo Direto de Dados de Mercado**: O mais utilizado e recomendado. Consiste em comparar o imóvel a propriedades semelhantes negociadas no mercado. Utiliza regressão linear e homogeneização.\n- **Método Involutivo**: Baseado no estudo de viabilidade técnico-econômica de um projeto hipotético para o terreno, subtraindo os custos e lucro do valor de venda. Utilizado para glebas e terrenos grandes.\n- **Método Evolutivo**: Soma o valor do terreno (comparativo) ao valor das benfeitorias (custo de reedição, descontando depreciação). Comum para imóveis atípicos (escolas, hospitais, fábricas).\n- **Capitalização da Renda**: Calcula o valor presente de um fluxo futuro de receitas líquidas esperado para a propriedade.\n\n## 3. O Produto Imobiliário\n- Estudo focado em entender as demandas do mercado, localização, público-alvo, tipologias e padrão construtivo ideal.\n\n## 4. Plano de Negócios e Comercialização\n- Projeta o ritmo de vendas (velocidade de vendas - VGV), custos de marketing, comissionamentos e estratégias de lançamento.\n\n## 5. EVTEA (Estudo de Viabilidade Técnico-Econômica e Ambiental)\n- Avalia se um projeto deve ou não ser realizado baseando-se em métricas financeiras (VPL, TIR, Payback), restrições ambientais, viabilidade física e legal.\n\n## 6. Incorporação Imobiliária (Lei 4.591/64)\n- **Conceito**: Atividade de promover a construção de edificações compostas de unidades autônomas, alienando-as antes de concluídas.\n- Envolve o Patrimônio de Afetação e o papel do incorporador.\n\n## 7. Parcelamento do Solo Urbano (Lei 6.766/79)\n- **Loteamento**: Subdivisão de gleba com a **abertura** ou ampliação/prolongamento de vias públicas de circulação.\n- **Desmembramento**: Subdivisão de gleba com aproveitamento do sistema viário **existente** (não abre novas ruas).\n- Requisitos básicos de áreas públicas institucionais e áreas verdes.\n\n## 8. Aprovações e Licenças\n- Etapas legais: Alvará de construção, licenciamento ambiental (LP, LI, LO), anuência prévia, Habite-se.\n\n## 9. Coleta de Dados\n- Formas de conseguir dados para amostragem: plataformas imobiliárias, corretores, registros de cartórios, pesquisas in loco. O cuidado na eliminação de _outliers_ e dados tendenciosos é essencial.\n\n## 10. AVM e Machine Learning na Avaliação\n- **AVM (Automated Valuation Model)**: Sistemas de software que fornecem estimativas de valor usando modelagem matemática e bases de dados, sem intervenção direta do avaliador para cada laudo.\n- **Modelos Avançados**:\n  - **Random Forest**: Algoritmo de florestas aleatórias (conjunto de árvores de decisão). Robusto para precificação pois lida bem com relações não lineares de características do imóvel.\n  - **Gradient Boosting**: Técnica iterativa de aprendizado de máquina que reduz erros de árvores anteriores, criando um modelo final preditivo muito preciso para o valor de mercado.\n\n---\n## Checklist de Estudos\n- [ ] Conhecer os graus de fundamentação e precisão da NBR 14.653\n- [ ] Diferenciar os 4 principais métodos (Comparativo, Involutivo, Evolutivo e Renda)\n- [ ] Entender a diferença entre Loteamento e Desmembramento (Lei 6.766)\n- [ ] Ler conceitos básicos sobre AVM, VPL e TIR\n"}, {"id": "14-pavimentacao", "title": "🛣️ Pavimentação, Vias e Mobilidade", "category": "Engenharia Civil", "fileName": "14 - Pavimentação, Vias e Mobilidade.md", "content": "---\ntags:\n  - pavimentacao\n  - vias\n  - mobilidade\n  - especifico-eng\n---\n# 🛣️ Pavimentação, Vias, Transporte e Mobilidade\n\n## 1. Materiais para Pavimentação\n- **Agregados**: Brita, areia, filler.\n- **Ligantes Asfálticos**:\n  - **CAP (Cimento Asfáltico de Petróleo)**: Utilizado em misturas a quente (CBUQ).\n  - **Emulsões Asfálticas**: Misturas de CAP e água com agentes tensoativos. Usadas a frio (pinturas de ligação, lama asfáltica).\n- **Cimento Portland**: Usado em pavimentos rígidos, sub-bases tratadas (solo-cimento).\n\n## 2. Pavimentos Flexíveis\n- Deformam-se de forma elástica, distribuindo as cargas para as camadas inferiores de maneira concentrada.\n- **Camadas** (de baixo para cima): Subleito, Reforço do Subleito, Sub-base, Base, Revestimento (ex: CBUQ, TSS).\n- **Dimensionamento**: O método empírico DNER/DNIT considera o Número N (tráfego) e o CBR (Índice de Suporte Califórnia) do solo.\n\n## 3. Pavimentos Rígidos\n- Elevada rigidez, distribuem a carga em uma grande área. Basicamente placas de concreto sobre sub-base.\n- **Juntas**: Necessárias para controlar retração, expansão e empenamento térmico (juntas de dilatação, retração e construção).\n- **Barras de Transferência (Dowels)**: Transmitem cargas cortantes de uma placa para outra sem impedir a movimentação longitudinal.\n\n## 4. Controle Tecnológico\n- **Marshall**: Dimensionamento e controle de misturas asfálticas a quente. Avalia estabilidade e fluência.\n- **CBR (California Bearing Ratio)**: Avalia a capacidade de suporte do solo e sua expansão.\n- **Grau de Compactação**: Relação entre o peso específico seco no campo e o obtido no ensaio de Proctor.\n\n## 5. Patologia de Pavimentos\n- **Trincas**: Fadiga (couro de jacaré), retração térmica.\n- **Panelas (Buracos)**: Degradação completa do revestimento atingindo a base.\n- **Afundamentos**: Plásticos (fluência do CBUQ) ou de consolidação (falha estrutural nas camadas inferiores).\n- **Corrugação (Costela de vaca)**: Ondulações transversais causadas por excesso de asfalto ou deformação da mistura.\n\n## 6. Manutenção\n- **Recapeamento**: Adição de nova camada estrutural.\n- **Fresagem**: Remoção controlada da camada superficial degradada antes da recomposição.\n- **Reciclagem**: Reutilização do material fresado (RAP).\n- **Tapa-Buraco**: Medida corretiva paliativa e pontual.\n\n## 7. Geometria de Vias\n- **Alinhamento Horizontal**: Tangentes, curvas circulares e curvas de transição (clotoide).\n- **Alinhamento Vertical**: Greide, rampas e curvas verticais (côncavas e convexas).\n- **Seção Transversal**: Pista de rolamento, acostamento, canteiro, taludes.\n- **Superelevação**: Inclinação transversal nas curvas para contrabalançar a força centrífuga.\n\n## 8. Vias Vicinais\n- Estradas rurais ou secundárias de baixo volume de tráfego, geralmente sem revestimento asfáltico. Importantes para escoamento agrícola.\n\n## 9. Drenagem\n- **Superficial**: Captura e direciona águas da chuva (meio-fio, sarjetas, valetas, bueiros).\n- **Profunda / Subsuperficial**: Rebaixa o lençol freático e drena a água das camadas do pavimento (drenos profundos e cegos).\n\n## 10. Sinalização Viária e Segurança\n- **Horizontal**: Pinturas, tachas (ex: marcas longitudinais, faixas de pedestre).\n- **Vertical**: Placas (regulamentação, advertência, indicação).\n- **Dispositivos de Segurança**: Defensas metálicas (guard-rails), barreiras de concreto (New Jersey), atenuadores de impacto.\n\n## 11. Obras de Arte Especiais (OAE)\n- **Pontes**: Ultrapassam obstáculos aquáticos.\n- **Viadutos**: Ultrapassam outras vias terrestres.\n- **Bueiros**: Estruturas de drenagem e passagem sob aterros.\n\n## 12. Mobilidade Urbana\n- **Intermodalidade e Multimodalidade**: Integração entre diferentes modos de transporte (ônibus, metrô, bicicleta).\n- **Transporte Coletivo**: BRT, VLT, metrô, faixas exclusivas.\n- **Acessibilidade e Calçadas**: Desenho universal, piso tátil.\n- **Mobilidade Ativa**: Ciclovias, ciclofaixas.\n\n## 13. Estudos de Viabilidade\n- Avaliação de demanda, capacidade viária, níveis de serviço (LOS de A a F), e benefícios socioeconômicos para justificar investimentos em infraestrutura.\n\n---\n## Checklist de Estudos\n- [ ] Diferenciar componentes de pavimentos flexíveis e rígidos\n- [ ] Entender os ensaios de CBR e Marshall\n- [ ] Diferenciar os tipos de patologias asfálticas\n- [ ] Compreender os conceitos de geometria de vias (superelevação, greide)\n- [ ] Ler diretrizes de mobilidade sustentável e acessibilidade\n"}, {"id": "15-sustentabilidade", "title": "♻️ Sustentabilidade e Acessibilidade", "category": "Engenharia Civil", "fileName": "15 - Sustentabilidade e Acessibilidade.md", "content": "---\ntags:\n  - sustentabilidade\n  - acessibilidade\n  - nbr9050\n  - nbr15575\n  - especifico-eng\n---\n\n# ♻️ Sustentabilidade, Acessibilidade e Conforto\n\n> [!NOTE]\n> Este documento abrange os principais conceitos de sustentabilidade, desempenho e acessibilidade em edificações, cobrados frequentemente em concursos de Engenharia Civil.\n\n## 1. Sustentabilidade na Construção Civil\n- **Conceitos:** Redução do impacto ambiental, eficiência energética, uso racional da água, ciclo de vida dos materiais.\n- **Certificações Ambientais:** \n  - **LEED** (Leadership in Energy and Environmental Design): Sistema internacional de certificação e orientação ambiental.\n  - **AQUA-HQE** (Alta Qualidade Ambiental): Certificação baseada no sistema francês, adaptado à realidade brasileira pela Fundação Vanzolini.\n- **Materiais Sustentáveis:** Materiais reciclados, recicláveis, de baixo impacto ambiental, com baixa emissão de compostos orgânicos voláteis (COV).\n- **Gestão de Resíduos de Construção e Demolição (RCC):** Resolução CONAMA 307. Classificação em Classes A, B, C e D.\n- **Demolição Seletiva:** Processo de desconstrução que visa a separação de materiais na origem para maximizar o reaproveitamento e reciclagem.\n\n## 2. NBR 9050 - Acessibilidade\n- **Rampas:** Inclinação máxima permitida de 8,33% (para desníveis maiores). Fórmulas de cálculo de inclinação $i = (h/c) \\times 100$.\n- **Larguras Mínimas:** Em corredores de uso público e coletivo, mínimo de 1,20 m (para locais sem obstáculos).\n- **Sanitários Acessíveis:** Dimensões mínimas para rotação (1,50 m de diâmetro), barras de apoio, altura da bacia.\n- **Sinalização Tátil:** Piso tátil de alerta e direcional.\n- **Vagas PCD:** Sinalização horizontal e vertical, área de circulação adjacente (faixa de embarque/desembarque de 1,20 m).\n- **Circulação Vertical (Elevador):** Dimensões mínimas da cabine, tempo de abertura de portas, sinalização braile e sonora.\n- **Módulo de Referência:** Projeção no piso ocupada por uma pessoa em cadeira de rodas, medindo 0,80 m x 1,20 m.\n\n## 3. NBR 15.575 - Desempenho de Edificações Habitacionais\n- **Partes 1 a 6:**\n  1. Requisitos gerais.\n  2. Requisitos para os sistemas estruturais.\n  3. Requisitos para os sistemas de pisos.\n  4. Requisitos para os sistemas de vedações verticais internas e externas.\n  5. Requisitos para os sistemas de coberturas.\n  6. Requisitos para os sistemas hidrossanitários.\n- **Vida Útil (VU) e Vida Útil de Projeto (VUP):** Período em que o edifício e seus sistemas se prestam às atividades para as quais foram projetados.\n- **Níveis de Desempenho:**\n  - **M** (Mínimo)\n  - **I** (Intermediário)\n  - **S** (Superior)\n\n## 4. Conforto Térmico\n- **Transmitância Térmica (U):** Quantidade de calor que atravessa um elemento construtivo. Quanto menor, maior o isolamento.\n- **Zoneamento Bioclimático (NBR 15220):** Divisão do território brasileiro em 8 zonas com diretrizes construtivas específicas para cada clima.\n- **Estratégias Passivas:** Ventilação cruzada, sombreamento, inércia térmica, resfriamento evaporativo.\n\n## 5. Conforto Acústico\n- **Isolamento Acústico:** Redução da transmissão de som entre ambientes (ex: uso de paredes duplas).\n- **Absorção Acústica:** Redução da reverberação dentro do ambiente (ex: uso de espumas, forros porosos).\n- **NR (Noise Criteria):** Curvas de avaliação de ruído de fundo em ambientes fechados.\n- **Classes de Ruído:** Conforme NBR 10151 e NBR 10152.\n\n## 6. Conforto Lumínico\n- **Iluminação Natural e Artificial:** Integração para eficiência energética.\n- **NBR 15215:** Iluminação natural.\n- **NBR 5413 / NBR ISO 8995-1:** Iluminância de interiores (níveis lux recomendados para diferentes ambientes de trabalho).\n\n## 7. Qualidade Ambiental\n- **ACV (Avaliação do Ciclo de Vida):** Metodologia para quantificar os impactos ambientais de um produto do \"berço ao túmulo\".\n- **Impactos da Construção:** Consumo de recursos naturais, emissões de gases de efeito estufa, geração de resíduos.\n\n## 8. Energia Solar Fotovoltaica\n- **Princípios:** Conversão de energia luminosa em energia elétrica (efeito fotovoltaico).\n- **Tipos de Painéis:**\n  - **Monocristalino:** Maior eficiência e custo.\n  - **Policristalino:** Menor custo, eficiência um pouco inferior.\n- **Inversor:** Converte a corrente contínua (CC) gerada pelos painéis em corrente alternada (CA) usada na rede.\n- **Sistemas:**\n  - **On-grid:** Conectado à rede elétrica da concessionária.\n  - **Off-grid:** Autônomo, com uso de baterias para armazenamento.\n- **BIPV (Building-Integrated Photovoltaics):** Integração dos módulos na arquitetura da edificação (fachadas, coberturas).\n- **Impacto Ambiental:** Fonte limpa, mas com impactos na fabricação e descarte dos painéis.\n- **Regulamentação:** Resolução Normativa (REN) 482 e 1000 da ANEEL (Geração Distribuída).\n\n> [!TIP]\n> Em provas, atente-se às inclinações máximas da NBR 9050 e aos níveis de desempenho da NBR 15575.\n\n---\n\n### Checklist de Estudo\n- [ ] Revisar conceitos de certificação LEED e AQUA\n- [ ] Memorizar medidas da NBR 9050 (rampas, módulo de referência)\n- [ ] Entender os três níveis de desempenho da NBR 15575\n- [ ] Ler diretrizes do Zoneamento Bioclimático da NBR 15220\n- [ ] Estudar as diferenças entre sistemas fotovoltaicos On-grid e Off-grid\n"}, {"id": "16-hidraulica", "title": "💧 Hidráulica, Hidrologia e Saneamento", "category": "Engenharia Civil", "fileName": "16 - Hidráulica, Hidrologia e Saneamento.md", "content": "---\ntags:\n  - hidraulica\n  - hidrologia\n  - saneamento\n  - especifico-eng\n---\n\n# 💧 Hidráulica, Hidrologia e Saneamento\n\n> [!NOTE]\n> Área de grande relevância, exigindo domínio tanto teórico (ciclo hidrológico) quanto prático (cálculo de perdas de carga e dimensionamento).\n\n## 1. Hidráulica Geral\n- **Estática dos Fluidos:** Lei de Stevin, Princípio de Pascal, empuxo (Arquimedes).\n- **Cinemática:** Tipos de escoamento (laminar, turbulento, permanente, uniforme).\n- **Equação da Continuidade:** $Q = V_1 \\cdot A_1 = V_2 \\cdot A_2$.\n- **Teorema de Bernoulli:** Conservação de energia (carga de posição, carga de pressão, carga cinética).\n- **Perdas de Carga:** \n  - Fórmulas empíricas: **Hazen-Williams** (condutos forçados de água), **Darcy-Weisbach** (universal).\n- **Orifícios e Vertedores:** Fórmulas para cálculo de vazão. Tipos de vertedores (retangular, triangular, Cipolletti).\n- **Condutos Forçados:** Linha piezométrica e linha de energia.\n- **Canais:** Escoamento livre, fórmula de **Manning** ($V = \\frac{1}{n} \\cdot R_h^{2/3} \\cdot I^{1/2}$).\n\n## 2. Hidrologia Aplicada\n- **Ciclo Hidrológico:** Precipitação, evapotranspiração, infiltração, escoamento superficial e subterrâneo.\n- **Precipitação:** Chuvas de projeto, curvas IDF (Intensidade-Duração-Frequência), tempo de recorrência (TR).\n- **Infiltração:** Capacidade de infiltração do solo.\n- **Escoamento Superficial:** Fatores intervenientes.\n- **Hidrograma Unitário:** Resposta da bacia a uma chuva efetiva unitária.\n- **Tempo de Concentração ($t_c$):** Tempo para a água da chuva ir do ponto mais remoto até o exutório.\n- **Método Racional:** $Q = \\frac{C \\cdot i \\cdot A}{360}$ (para bacias pequenas, onde o $t_c$ é pequeno).\n\n## 3. Sistemas de Abastecimento de Água\n- **Componentes:** Captação (superficial/subterrânea) $\\rightarrow$ Adução $\\rightarrow$ ETA $\\rightarrow$ Reservação $\\rightarrow$ Distribuição.\n- **Tratamento (ETA):**\n  1. Coagulação (adição de sulfato de alumínio, mistura rápida)\n  2. Floculação (mistura lenta)\n  3. Decantação\n  4. Filtração\n  5. Desinfecção/Fluoretação\n\n## 4. Sistemas de Esgotamento Sanitário\n- **Coleta:** Sistema separador absoluto (esgoto separado da água pluvial).\n- **Transporte e Estações Elevatórias:** Bombeamento de esgoto para vencer desníveis.\n- **Tratamento (ETE):**\n  - **Preliminar:** Gradeamento, desarenador (remoção de sólidos grosseiros e areia).\n  - **Primário:** Decantadores primários (remoção de sólidos suspensos sedimentáveis).\n  - **Secundário:** Processos biológicos (lodos ativados, lagoas de estabilização, reatores UASB) para remoção de matéria orgânica (DBO).\n  - **Terciário:** Remoção de nutrientes (N e P), patógenos.\n- **Reuso:** Uso de efluentes tratados para fins não potáveis.\n\n## 5. Drenagem Pluvial\n- **Micro e Macrodrenagem:** \n  - Micro: sistema inicial de captação (guias, sarjetas, bocas de lobo).\n  - Macro: galerias tronco, canais, bacias de detenção/retenção.\n- **Dimensionamento de Galerias:** Velocidade mínima e máxima, declividade.\n- **Componentes:** Poços de visita (PV), caixas de captação, dissipadores de energia.\n\n## 6. Aterros Sanitários\n- **Projeto:** Seleção de área, vida útil.\n- **Impermeabilização:** Manta PEAD, camada de argila (para evitar contaminação do lençol freático).\n- **Drenagem:** Sistema de coleta de chorume e de gases (biogás/metano).\n- **Monitoramento:** Poços de monitoramento a montante e jusante.\n\n## 7. Resíduos Sólidos\n- **Classificação (NBR 10004):** Classe I (Perigosos), Classe IIA (Não Inertes) e Classe IIB (Inertes).\n- **Gestão:** Coleta, transporte, tratamento e destinação final ambientalmente adequada.\n\n## 8. Marco Regulatório do Saneamento\n- **Lei 14.026/2020:** \n  - Metas de universalização (99% água potável e 90% coleta e tratamento de esgotos até 2033).\n  - Fim dos contratos de programa (obrigatoriedade de licitação).\n  - Regionalização dos serviços.\n  - Papel regulatório da ANA (Agência Nacional de Águas e Saneamento Básico).\n\n## 9. Estudos de Viabilidade em Saneamento\n- **EVTE (Estudo de Viabilidade Técnica e Econômica):** Avaliação de alternativas de projeto, análise de custos (CAPEX e OPEX), rentabilidade.\n\n> [!WARNING]\n> Confundir ETA com ETE é um erro comum. Memorize que ETA usa coagulação/floculação e ETE usa tratamento biológico (UASB, lodos ativados).\n\n---\n\n### Fórmulas Importantes\n- **Continuidade:** $Q = V \\cdot A$\n- **Hazen-Williams:** $V = 0,355 \\cdot C \\cdot D^{0,63} \\cdot J^{0,54}$\n- **Manning:** $Q = \\frac{1}{n} \\cdot A \\cdot R_h^{2/3} \\cdot I^{1/2}$\n- **Método Racional:** $Q = C \\cdot I \\cdot A$\n\n### Checklist de Estudo\n- [ ] Revisar tipos de escoamento e perdas de carga\n- [ ] Memorizar a fórmula do Método Racional\n- [ ] Entender todas as etapas de uma ETA e uma ETE\n- [ ] Revisar os conceitos de macro e microdrenagem\n- [ ] Ler os principais pontos da Lei 14.026/2020 (Marco do Saneamento)\n"}, {"id": "17-legislacao-eng", "title": "📜 Legislação de Engenharia e Urbanismo", "category": "Engenharia Civil", "fileName": "17 - Legislação de Engenharia e Urbanismo.md", "content": "---\ntags:\n  - licitacoes\n  - urbanismo\n  - politica-urbana\n  - especifico-eng\n---\n\n# 📜 Legislação de Engenharia, Urbanismo e Infraestrutura\n\n## 1. Licitações e Contratos\n\n### Lei 14.133/2021 (Nova Lei de Licitações)\n- **Modalidades:** Concorrência, Pregão, Concurso, Leilão e **Diálogo Competitivo** (nova modalidade). Toma de preços e convite deixaram de existir.\n- **Critérios de Julgamento:** Menor preço, maior desconto, melhor técnica ou conteúdo artístico, técnica e preço, maior lance, maior retorno econômico.\n- **Contratos:** Prazos, prorrogações, reajuste.\n- **Garantias:** Pode chegar até 30% em obras de grande vulto (cláusula de step-in).\n- **Alterações:** Limites de aditivos (25% obras e compras, 50% reformas).\n- **Inovações:** Exigência de uso de BIM (Building Information Modeling) preferencialmente.\n- **Orçamentação:** Referências do SINAPI (obras civis) e SICRO (obras rodoviárias).\n\n### Outras Leis de Contratação\n- **Lei 13.303/2016 (Estatais):** Regras específicas para empresas públicas e sociedades de economia mista.\n- **Lei 11.079/2004 (PPPs):** \n  - **Concessão Patrocinada:** Há tarifa cobrada dos usuários + contraprestação pecuniária do parceiro público.\n  - **Concessão Administrativa:** O parceiro público é o usuário direto ou indireto. Repartição de riscos e garantias.\n\n### Decreto 7.983/2013\n- Regras para elaboração do orçamento de referência de obras e serviços de engenharia com recursos federais.\n- Definição do uso do SINAPI e SICRO.\n- Composições de Custos Unitários, BDI (Benefícios e Despesas Indiretas) e Encargos Sociais.\n\n---\n\n## 2. Normas ABNT Principais\n- **NBR 6118:** Projeto de estruturas de concreto.\n- **NBR 6122:** Projeto e execução de fundações.\n- **NBR 9050:** Acessibilidade.\n- **NBR 15575:** Desempenho de edificações habitacionais.\n- **NBR 14653:** Avaliação de bens (Partes 1 a 7).\n- **NBR 13752:** Perícias de engenharia na construção civil.\n- **NBR 12721:** Avaliação de custos para incorporação imobiliária (CUB).\n\n---\n\n## 3. Política Urbana\n\n### Estatuto da Cidade (Lei 10.257/2001)\n- Regulamenta o desenvolvimento urbano (art. 182 e 183 da CF).\n- **Instrumentos:**\n  - Plano Diretor (obrigatório para cidades > 20 mil hab.).\n  - IPTU progressivo no tempo.\n  - Outorga Onerosa do Direito de Construir.\n  - EIV (Estudo de Impacto de Vizinhança).\n  - Operações Urbanas Consorciadas.\n  - Direito de Preempção.\n  - Usucapião Especial de Imóvel Urbano.\n\n### Novas Abordagens Urbanas\n- **Carta Brasileira das Cidades Inteligentes:** Integração tecnológica, sustentabilidade e inclusão digital na gestão urbana.\n- **HIS (Habitação de Interesse Social):** Foco em famílias de baixa renda, locação social, projetos de renda mista.\n- **Reurb (Lei 13.465/2017):** Regularização Fundiária Urbana.\n  - **Reurb-S:** Interesse Social (gratuito para baixa renda).\n  - **Reurb-E:** Interesse Específico (oneroso).\n  - **CRF:** Certidão de Regularização Fundiária.\n- **Urbanização de Favelas:** Regularização jurídica, infraestrutura básica e melhoria habitacional.\n\n---\n\n## 4. Infraestrutura e Políticas Nacionais\n- **Política Nacional de Saneamento Básico (Lei 11.445/2007 + Novo Marco Lei 14.026/2020).**\n- **Política Nacional de Resíduos Sólidos (Lei 12.305/2010):** Logística reversa, responsabilidade compartilhada, fim dos lixões.\n- **Política Nacional de Habitação (Lei 11.124/2005):** FNHIS.\n- **Política Nacional de Transportes:** Multimodalidade, integração.\n- **REIDI (Lei 11.488/2007):** Regime Especial de Incentivos para o Desenvolvimento da Infraestrutura (suspensão de PIS/PASEP e COFINS).\n- **DUP (Declaração de Utilidade Pública):** Para desapropriação e servidão em obras de energia elétrica.\n- **Segurança de Barragens (Lei 12.334/2010):** Política Nacional de Segurança de Barragens (PNSB). \n  - Classificação por Dano Potencial Associado (DPA) e Categoria de Risco (CRI).\n  - Plano de Ação de Emergência (PAE).\n\n> [!IMPORTANT]\n> A Lei 14.133/2021 é cobrança certa nas provas atuais. Estude profundamente o Diálogo Competitivo e os novos limites de dispensa de licitação.\n\n---\n\n### Checklist de Estudo\n- [ ] Revisar as modalidades da Lei 14.133/2021\n- [ ] Ler os instrumentos urbanísticos do Estatuto da Cidade\n- [ ] Compreender a diferença entre Reurb-S e Reurb-E\n- [ ] Decorar os limites de aditivos de contratos de obra\n- [ ] Revisar conceitos de Segurança de Barragens (DPA e CRI)\n"}, {"id": "18-discursiva", "title": "✍️ Prova Discursiva — Estratégia", "category": "Discursiva & Banca", "fileName": "18 - Prova Discursiva - Estratégia.md", "content": "---\ntags:\n  - discursiva\n  - redacao\n  - estrategia\n---\n\n# ✍️ Prova Discursiva — Estratégia e Preparação\n\n> [!IMPORTANT]\n> A prova discursiva vale **10 pontos** e é o **1º critério de desempate**. Subestimá-la pode custar sua classificação.\n\n## 1. Formato\n- 1 (uma) questão dissertativa em formato de estudo de caso, parecer técnico ou questão discursiva direta.\n- Tema extraído do conteúdo de **Conhecimentos Específicos de Engenharia Civil**.\n\n## 2. Critérios de Avaliação\n- Clareza, concisão, precisão e coerência na exposição de ideias.\n- **Domínio técnico:** Uso correto de conceitos, citação de normas da ABNT aplicáveis e legislação pertinente.\n- Capacidade de solucionar problemas ou redigir um parecer técnico conclusivo.\n- Correção gramatical, ortografia e pontuação (fator secundário em provas de engenharia, mas que gera perda de pontos).\n\n## 3. Hipóteses de Nota ZERO\n- Escrever a lápis na versão definitiva.\n- Assinar ou colocar marca identificadora fora do local apropriado.\n- Letra ilegível.\n- Escrever fora do espaço delimitado.\n- Fuga total do tema.\n\n## 4. Nota Mínima\n- Para não ser eliminado, é necessário obter no mínimo **6,0 pontos (60%)**.\n\n## 5. Estrutura Recomendada de Resposta\nPara um texto coeso e técnico, siga a estrutura:\n1. **Introdução:** Contextualize o problema apresentado no enunciado e apresente seu posicionamento técnico.\n2. **Desenvolvimento (1 a 3 parágrafos):** \n   - Fundamente sua análise tecnicamente.\n   - Cite explicitamente **Normas Técnicas (ABNT)**, Leis e Decretos.\n   - Mostre conhecimento da prática da engenharia aplicada ao caso.\n3. **Conclusão:** Síntese final com recomendações, parecer final de aprovação/rejeição ou solução definitiva para o problema.\n\n## 6. Temas Prováveis (Baseado no Edital da SEMA-MT)\nDado o perfil do órgão (Secretaria de Meio Ambiente), os temas tendem a ser interdisciplinares (Engenharia + Ambiental):\n- Licenciamento ambiental de obras civis e infraestrutura.\n- Saneamento básico e drenagem urbana.\n- Sustentabilidade na construção civil e certificações.\n- Orçamento, licitações (Lei 14.133) e fiscalização de obras públicas.\n- Segurança de barragens (muito forte para SEMA).\n- Avaliação de impacto ambiental em empreendimentos de engenharia.\n- Acessibilidade em edificações públicas (NBR 9050).\n- Hidráulica e hidrologia aplicadas à prevenção de desastres.\n\n## 7. Dicas de Redação Técnica\n- **Cite as NBRs pelo número:** Ex: \"De acordo com a NBR 9050...\", \"Conforme preconiza a NBR 15575...\".\n- **Cite Legislação:** Ex: \"Segundo a Lei 14.133/2021...\", \"Conforme a Política Nacional de Resíduos Sólidos (Lei 12.305/2010)...\".\n- Use terminologia técnica precisa (evite palavras vagas como \"coisa\", \"arrumar\", \"fazer\").\n- Estruture em parágrafos claros (um tópico frasal por parágrafo).\n- **NUNCA** ultrapasse o espaço delimitado para as linhas.\n\n## 8. Plano de Treino\n- **Frequência:** Fazer pelo menos **1 redação/parecer por semana**.\n- **Simulação:** Fazer a discursiva junto com um simulado de questões objetivas, medindo o tempo total e usando folha pautada.\n- **Correção:** Comparar o próprio texto com o padrão de resposta (espelho) de provas anteriores.\n\n---\n\n### Checklist de Estudo\n- [ ] Ler espelhos de correção de bancas em concursos anteriores (Cesgranrio, Cebraspe, FCC).\n- [ ] Memorizar os números das 10 principais NBRs.\n- [ ] Praticar a escrita de um \"Parecer Técnico\" com formatação adequada.\n- [ ] Fazer uma discursiva teste sobre \"Segurança de Barragens\".\n"}, {"id": "19-cesgranrio", "title": "🎓 Estratégia Banca Cesgranrio", "category": "Discursiva & Banca", "fileName": "19 - Estratégia para a Banca Cesgranrio.md", "content": "---\ntags:\n  - cesgranrio\n  - banca\n  - estrategia\n---\n\n# 🎓 Estratégia para a Banca Cesgranrio\n\n> [!NOTE]\n> Conhecer o perfil da banca é tão importante quanto dominar o conteúdo. A Cesgranrio possui um estilo próprio que exige estratégia específica.\n\n## 1. Perfil da Banca\n- Fundação Cesgranrio é uma banca tradicional, organiza provas de grandes estatais (Petrobras, Transpetro, Banco do Brasil, Caixa, BNDES) e recentemente o CNU.\n- Nível de dificuldade: Médio a Difícil (especialmente nas provas de Engenharia da Petrobras).\n- Padrão consistente ao longo dos anos.\n\n## 2. Características das Questões\n- **Múltipla escolha:** 5 alternativas (A, B, C, D, E).\n- **Enunciados:** Diretos, técnicos, com pouca enrolação, embora às vezes tragam pequenos \"cases\".\n- **Pegadinhas:** Menos comuns que na FGV, mas a banca exige precisão na terminologia. Se você não souber o conceito exato, as alternativas podem parecer todas plausíveis.\n- **Literalidade:** Muita cobrança literal de leis, decretos e itens específicos de normas da ABNT.\n\n## 3. Língua Portuguesa\n- Textos de tamanho médio.\n- Foco em reescrita de frases (mantendo o sentido e a correção).\n- Forte cobrança de gramática tradicional: pontuação, concordância verbal/nominal, regência, crase e colocação pronominal.\n- Exige estudo dedicado ao Manual de Redação da Presidência da República (quando no edital).\n\n## 4. Engenharia e Legislação Ambiental na Cesgranrio\n- **Normas ABNT:** São cobradas no detalhe (medidas, índices, tabelas). Não basta saber o conceito.\n- **Orçamento e Planejamento:** Muito cálculo de BDI, análise de curva ABC, interpretação de cronogramas Gantt, redes PERT-CPM e, agora, Lei 14.133/2021.\n- **Águas/Saneamento:** Questões costumam articular hidráulica pura com legislação ambiental e tecnologias de tratamento de efluentes.\n- **Estruturas/Geotecnia:** Cobram teoria de resistência dos materiais e aplicações normativas (NBR 6118, 6122).\n\n## 5. Inovações e Tendências Atuais\nO edital atual e o padrão recente da banca mostram inovações que devem ser priorizadas:\n- AVM (Avaliação em Massa) e uso de Machine Learning / IA em avaliações imobiliárias.\n- Sistemas de Energia Solar Fotovoltaica (componentes, eficiência).\n- BIM (Building Information Modeling).\n- Sustentabilidade e certificações (LEED, AQUA).\n\n## 6. Discursiva da Cesgranrio\n- Geralmente focada em um problema prático (estudo de caso ou parecer técnico).\n- Exige linguagem formal impecável e forte fundamentação normativa.\n- Valoriza soluções exequíveis e tecnicamente embasadas.\n\n## 7. Dicas Gerais e Gestão de Prova\n- **Tempo:** Gerencie bem as 5 horas para resolver todas as questões objetivas + discursiva + preencher o gabarito. (Média de 3 minutos por questão objetiva).\n- **Ordem de resolução:** Comece rascunhando ideias da discursiva, depois vá para as disciplinas de maior peso/facilidade. Deixe os cálculos pesados para o final.\n- **Chute:** Como não há desconto (não é modelo Certo/Errado do Cebraspe), **NUNCA deixe questão em branco**.\n\n> [!TIP]\n> A melhor preparação para a Cesgranrio é resolver exaustivamente questões anteriores da própria banca.\n\n---\n\n### Sugestão de Provas Anteriores para Praticar\n- Petrobras (Diversos anos) - Engenheiro Civil\n- Transpetro - Engenheiro Civil\n- BNDES - Profissional Básico Engenharia Civil\n- IBGE\n- EPE (Empresa de Pesquisa Energética)\n\n### Checklist de Estudo\n- [ ] Filtrar questões da Cesgranrio no QConcursos/TecConcursos (Engenharia Civil).\n- [ ] Resolver pelo menos 2 provas antigas da Petrobras na íntegra.\n- [ ] Mapear os \"assuntos favoritos\" da banca em Planejamento e Orçamento.\n- [ ] Treinar a leitura rápida de textos de Português.\n"}];
+
+    // Setup Marked options
+    marked.setOptions({
+      gfm: true,
+      breaks: true
+    });
+
+    mermaid.initialize({ startOnLoad: false, theme: 'default' });
+
+    let currentDocIndex = 0;
+
+    // Process markdown to convert Obsidian callouts and wikilinks
+    function processMarkdown(md) {
+      // Clean YAML frontmatter
+      md = md.replace(/^---[\s\S]*?---\s*/m, '');
+
+      // Replace Obsidian Wikilinks: [[Target|Label]] -> [Label](#/id)
+      md = md.replace(/\[\[(.*?)\|(.*?)\]\]/g, function(match, p1, p2) {
+        const found = DOCS.find(d => d.title.includes(p1.trim()) || d.fileName.includes(p1.trim()));
+        const linkId = found ? found.id : '00-dashboard';
+        return `[${p2.trim()}](#/${linkId})`;
+      });
+
+      md = md.replace(/\[\[(.*?)\]\]/g, function(match, p1) {
+        const found = DOCS.find(d => d.title.includes(p1.trim()) || d.fileName.includes(p1.trim()));
+        const linkId = found ? found.id : '00-dashboard';
+        return `[${p1.trim()}](#/${linkId})`;
+      });
+
+      // Render Markdown to HTML first
+      let html = marked.parse(md);
+
+      // Process Callouts in HTML blockquotes
+      html = html.replace(/<blockquote>\s*<p>\s*\[!NOTE\]\s*([\s\S]*?)<\/p>\s*<\/blockquote>/gi, '<div class="callout callout-note"><strong>ℹ️ NOTA:</strong> $1</div>');
+      html = html.replace(/<blockquote>\s*<p>\s*\[!TIP\]\s*([\s\S]*?)<\/p>\s*<\/blockquote>/gi, '<div class="callout callout-tip"><strong>💡 DICA:</strong> $1</div>');
+      html = html.replace(/<blockquote>\s*<p>\s*\[!WARNING\]\s*([\s\S]*?)<\/p>\s*<\/blockquote>/gi, '<div class="callout callout-warning"><strong>⚠️ ATENÇÃO:</strong> $1</div>');
+      html = html.replace(/<blockquote>\s*<p>\s*\[!IMPORTANT\]\s*([\s\S]*?)<\/p>\s*<\/blockquote>/gi, '<div class="callout callout-important"><strong>❗ IMPORTANTE:</strong> $1</div>');
+      html = html.replace(/<blockquote>\s*<p>\s*\[!CAUTION\]\s*([\s\S]*?)<\/p>\s*<\/blockquote>/gi, '<div class="callout callout-warning"><strong>🛑 CUIDADO:</strong> $1</div>');
+
+      // Process Mermaid code blocks
+      html = html.replace(/<pre><code class="language-mermaid">([\s\S]*?)<\/code><\/pre>/gi, '<div class="mermaid">$1</div>');
+
+      return html;
+    }
+
+    // Render Sidebar
+    function renderSidebar(filteredDocs = null) {
+      const menu = document.getElementById('sidebarMenu');
+      const docsToRender = filteredDocs || DOCS;
+      
+      const categories = {};
+      docsToRender.forEach(doc => {
+        if (!categories[doc.category]) categories[doc.category] = [];
+        categories[doc.category].push(doc);
+      });
+
+      let html = '';
+      for (const [category, items] of Object.entries(categories)) {
+        html += `<div class="category-group">
+          <div class="category-title">${category}</div>`;
+        items.forEach(doc => {
+          const isActive = DOCS[currentDocIndex] && DOCS[currentDocIndex].id === doc.id ? 'active' : '';
+          html += `<a class="nav-item ${isActive}" onclick="loadDoc('${doc.id}')">${doc.title}</a>`;
+        });
+        html += `</div>`;
+      }
+      menu.innerHTML = html;
+    }
+
+    // Load Document
+    async function loadDoc(id) {
+      const index = DOCS.findIndex(d => d.id === id);
+      if (index === -1) return;
+
+      currentDocIndex = index;
+      window.location.hash = '#/' + id;
+
+      const doc = DOCS[index];
+      const contentArea = document.getElementById('contentArea');
+      contentArea.innerHTML = processMarkdown(doc.content);
+
+      // Render Mermaid diagrams if present
+      const mermaidDivs = contentArea.querySelectorAll('.mermaid');
+      if (mermaidDivs.length > 0) {
+        try {
+          await mermaid.run({ nodes: mermaidDivs });
+        } catch(e) {
+          console.warn('Mermaid render warning:', e);
         }
       }
-    };
-  </script>
-  <script src="//cdn.jsdelivr.net/npm/docsify@4"></script>
-  <script src="//cdn.jsdelivr.net/npm/docsify/lib/plugins/search.min.js"></script>
-  <script src="//cdn.jsdelivr.net/npm/docsify-copy-code/dist/docsify-copy-code.min.js"></script>
-  <script src="//cdn.jsdelivr.net/npm/docsify/lib/plugins/zoom-image.min.js"></script>
-  <script src="//cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
-  <script>
-    mermaid.initialize({ startOnLoad: false, theme: 'default' });
-    window.$docsify.plugins.push(function(hook, vm) {
-      hook.doneEach(function() {
-        mermaid.init(undefined, '.mermaid');
-      });
+
+      // Update Navigation Buttons (Next / Prev)
+      renderNavButtons();
+      renderSidebar();
+
+      // Scroll to top
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+
+      // Close mobile sidebar if open
+      document.getElementById('sidebar').classList.remove('open');
+    }
+
+    function renderNavButtons() {
+      const navContainer = document.getElementById('docNav');
+      let html = '';
+
+      if (currentDocIndex > 0) {
+        const prev = DOCS[currentDocIndex - 1];
+        html += `<div class="doc-btn" onclick="loadDoc('${prev.id}')">
+          <span class="doc-btn-label">← Anterior</span>
+          <span class="doc-btn-title">${prev.title}</span>
+        </div>`;
+      } else {
+        html += `<div></div>`;
+      }
+
+      if (currentDocIndex < DOCS.length - 1) {
+        const next = DOCS[currentDocIndex + 1];
+        html += `<div class="doc-btn" style="text-align: right; margin-left: auto;" onclick="loadDoc('${next.id}')">
+          <span class="doc-btn-label">Próximo →</span>
+          <span class="doc-btn-title">${next.title}</span>
+        </div>`;
+      }
+
+      navContainer.innerHTML = html;
+    }
+
+    // Search filter
+    document.getElementById('searchInput').addEventListener('input', function(e) {
+      const term = e.target.value.toLowerCase().trim();
+      if (!term) {
+        renderSidebar();
+        return;
+      }
+      const filtered = DOCS.filter(d => 
+        d.title.toLowerCase().includes(term) || 
+        d.content.toLowerCase().includes(term)
+      );
+      renderSidebar(filtered);
     });
+
+    // Mobile menu toggle
+    document.getElementById('menuToggle').addEventListener('click', function() {
+      document.getElementById('sidebar').classList.toggle('open');
+    });
+
+    // Hash change handler for direct links
+    window.addEventListener('hashchange', function() {
+      const hash = window.location.hash.replace('#/', '');
+      if (hash) {
+        loadDoc(hash);
+      }
+    });
+
+    // Initial load
+    const initialHash = window.location.hash.replace('#/', '');
+    if (initialHash && DOCS.some(d => d.id === initialHash)) {
+      loadDoc(initialHash);
+    } else {
+      loadDoc('00-dashboard');
+    }
   </script>
 </body>
 </html>

@@ -18,7 +18,7 @@ flowchart TD
 
 ## Detalhamento das Fases
 
-### FASE 1 (Semanas 1-3): Base Legal + Língua Portuguesa
+### FASE 1 (Semanas 1-3): Base Legal + 
 - **Objetivo da fase:** Construir base sólida na língua nativa e no entendimento inicial das leis.
 - **Matérias a estudar:** [[Língua Portuguesa]], Legislação inicial.
 - **Carga horária sugerida:** 15h a 20h / semana.
